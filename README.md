@@ -1,0 +1,4 @@
+CQPixmapEd
+==========
+
+Qt Pixmap Editor
