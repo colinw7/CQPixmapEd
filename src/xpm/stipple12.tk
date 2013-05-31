@@ -1,0 +1,4 @@
+  set    str "R0lGODlhDAAMAPEAAAAAAP///wAAAAAAACH5BAEAAAIALAAAAAAMAAwAAAIT"
+  append str "hIynmt28noOPUgntxEYzHnlAAQA7"
+
+  gset hdf_stipple12_image [image create photo -data $str]
