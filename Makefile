@@ -2,6 +2,6 @@ all:
 	cd src; qmake; make
 
 clean:
-	cd src; make clean
+	cd src; qmake; make clean
 	rm src/Makefile
-	rm bin/CQPixmapEd
+	rm -f bin/CQPixmapEd

@@ -45,10 +45,8 @@ CQColorWheel.h \
 CQColorChooser.h \
 CColorWheel.h \
 CQToolTip.h \
-COptVal.h \
 CBresenham.h \
 CUndo.h \
-accessor.h
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj
