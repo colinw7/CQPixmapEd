@@ -5,7 +5,6 @@
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
-INCLUDEPATH += . ../include
 
 #CONFIG += debug
 
@@ -45,14 +44,16 @@ CQColorWheel.h \
 CQColorChooser.h \
 CColorWheel.h \
 CQToolTip.h \
-CBresenham.h \
 CUndo.h \
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj
 LIB_DIR     = ../lib
 
-INCLUDEPATH += ../include
+INCLUDEPATH += \
+../include \
+../../CMath/include \
+../../CUtil/include \
 
 unix:LIBS += \
 -L$$LIB_DIR \
