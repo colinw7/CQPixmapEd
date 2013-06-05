@@ -1,5 +1,7 @@
 #include <CQPixmapImage.h>
 
+#include <CMathGen.h>
+
 #include <QFontMetrics>
 #include <QPainter>
 
@@ -7,9 +9,6 @@
 #include <cmath>
 #include <map>
 #include <set>
-
-#define RAD_TO_DEG(r) ((180.0*(r))/M_PI)
-#define DEG_TO_RAD(d) ((M_PI*(d))/180.0)
 
 CQPixmapImage::
 CQPixmapImage()

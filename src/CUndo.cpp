@@ -1,15 +1,9 @@
 #include <CUndo.h>
 
+#include <CFuncs.h>
 #include <cassert>
 #include <climits>
 #include <algorithm>
-
-struct CDeletePointer {
-  template<class T>
-  void operator()(const T *p) const {
-    delete p;
-  }
-};
 
 using std::string;
 

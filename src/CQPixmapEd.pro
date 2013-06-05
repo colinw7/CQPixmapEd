@@ -53,6 +53,7 @@ LIB_DIR     = ../lib
 INCLUDEPATH += \
 ../include \
 ../../CMath/include \
+../../COS/include \
 ../../CUtil/include \
 
 unix:LIBS += \
