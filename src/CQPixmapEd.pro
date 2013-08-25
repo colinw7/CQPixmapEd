@@ -26,7 +26,6 @@ CQColorWheel.cpp \
 CQColorChooser.cpp \
 CColorWheel.cpp \
 CQToolTip.cpp \
-CUndo.cpp \
 
 HEADERS += \
 CQPixmapAddColorDialog.h \
@@ -44,7 +43,6 @@ CQColorWheel.h \
 CQColorChooser.h \
 CColorWheel.h \
 CQToolTip.h \
-CUndo.h \
 
 DESTDIR     = ../bin
 OBJECTS_DIR = ../obj
@@ -54,7 +52,10 @@ INCLUDEPATH += \
 ../include \
 ../../CMath/include \
 ../../COS/include \
+../../CUndo/include \
 ../../CUtil/include \
 
 unix:LIBS += \
 -L$$LIB_DIR \
+-L../../CUndo/lib \
+-lCUndo
