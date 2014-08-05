@@ -4,6 +4,8 @@ TARGET = CQPixmapEd
 
 DEPENDPATH += .
 
+QT += widgets
+
 #CONFIG += debug
 
 # Input
@@ -21,7 +23,6 @@ CQPixmapTextDialog.cpp \
 CQPixmapImage.cpp \
 CQThumbnailCanvas.cpp \
 CQColorWheel.cpp \
-CQColorChooser.cpp \
 CColorWheel.cpp \
 CQToolTip.cpp \
 
@@ -38,7 +39,6 @@ CQPixmapTextDialog.h \
 CQPixmapImage.h \
 CQThumbnailCanvas.h \
 CQColorWheel.h \
-CQColorChooser.h \
 CColorWheel.h \
 CQToolTip.h \
 
@@ -52,8 +52,10 @@ INCLUDEPATH += \
 ../../COS/include \
 ../../CUndo/include \
 ../../CUtil/include \
+../../CQUtil/include \
 
 unix:LIBS += \
 -L$$LIB_DIR \
 -L../../CUndo/lib \
--lCUndo
+-L../../CQUtil/lib \
+-lCQUtil -lCUndo

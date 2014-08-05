@@ -3,7 +3,6 @@
 
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QVBoxLayout>
 #include <QLabel>
 
 CQPixmapAddColorDialog::
