@@ -51,6 +51,8 @@ class CQPixmapCanvasTip : public CQToolTipIFace {
   CQPixmapColorTip *widget_;
 };
 
+//-----
+
 CQPixmapCanvas::
 CQPixmapCanvas(CQPixmap *pixmap) :
  pixmap_(pixmap), pressed_(false)
@@ -85,7 +87,7 @@ mousePressEvent(QMouseEvent *mouseEvent)
 
   if (button_ == Qt::MidButton) {
     if (pixmap_->getImage().valid(x_, y_)) {
-      if (pixmap_->getImage().isColorMap()) {
+      if (pixmap_->isColorMap()) {
         int ind = pixmap_->getImage().pixelIndex(x_, y_);
 
         if (pixmap_->isFgActive())
@@ -94,12 +96,12 @@ mousePressEvent(QMouseEvent *mouseEvent)
           pixmap_->setBgColorNum(ind);
       }
       else {
-        QColor rgba = pixmap_->getImage().colorPixel(x_, y_);
+        QColor c = pixmap_->getImage().colorPixel(x_, y_);
 
         if (pixmap_->isFgActive())
-          pixmap_->setFgColor(rgba);
+          pixmap_->setFgColor(c);
         else
-          pixmap_->setBgColor(rgba);
+          pixmap_->setBgColor(c);
       }
     }
 
@@ -109,7 +111,7 @@ mousePressEvent(QMouseEvent *mouseEvent)
   if (button_ != Qt::LeftButton && button_ != Qt::RightButton)
     return;
 
-  if (pixmap_->getImage().isColorMap()) {
+  if (pixmap_->isColorMap()) {
     if (button_ == Qt::LeftButton)
       pixmap_->setColorNum(pixmap_->getFgColorNum());
     else

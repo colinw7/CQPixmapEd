@@ -3,13 +3,12 @@
 
 #include <accessor.h>
 
+#include <CQPixmapImage.h>
 #include <CUndo.h>
 #include <COptVal.h>
 
 #include <QMainWindow>
 #include <QPushButton>
-
-#include <CQPixmapImage.h>
 
 class QAction;
 class QToolBar;
@@ -29,11 +28,6 @@ class CQPixmapBgButton;
 class CQPixmapColorButton;
 
 class CQPixmapUndoImage : public CUndoData {
- private:
-  CQPixmap *pixmap_;
-  int       x_, y_;
-  QImage    image_;
-
  public:
   CQPixmapUndoImage(CQPixmap *pixmap, int x, int y, QImage image) :
    pixmap_(pixmap), x_(x), y_(y), image_(image) {
@@ -43,6 +37,11 @@ class CQPixmapUndoImage : public CUndoData {
   }
 
   bool exec();
+
+ private:
+  CQPixmap *pixmap_;
+  int       x_, y_;
+  QImage    image_;
 };
 
 class CQPixmap : public QMainWindow {
@@ -76,6 +75,8 @@ class CQPixmap : public QMainWindow {
 
  public:
   CQPixmap();
+
+  bool isColorMap() const { return getImage().isColorMap(); }
 
   Function getFunction() const { return function_; }
 
@@ -191,7 +192,7 @@ class CQPixmap : public QMainWindow {
   void drawPoint(int x, int y);
 
   void drawCanvasPoint(int x, int y);
-  void drawCanvasRect(int x, int y, const QColor &rgba);
+  void drawCanvasRect(int x, int y, const QColor &c);
   void drawCanvasRect(int x, int y, Qt::BrushStyle brushStyle);
   void drawXorCanvasPoint(int x, int y);
 

@@ -327,7 +327,7 @@ twoColor(QImage &image, const QColor &bg, const QColor &fg)
     }
   }
   else {
-    // shoud never get here
+    // should never get here
     assert(false);
   }
 }

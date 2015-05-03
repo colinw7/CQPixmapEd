@@ -72,9 +72,9 @@ CQPixmap() :
  function_             (FUNCTION_POINT),
  xor_mode_             (XOR_NONE),
  filename_             ("scratch"),
- pixmap_               (NULL),
- pixmap_painter_       (NULL),
- painter_              (NULL),
+ pixmap_               (0),
+ pixmap_painter_       (0),
+ painter_              (0),
  painter_depth_        (0),
  changed_              (true),
  grid_                 (true),
@@ -90,6 +90,8 @@ CQPixmap() :
  x_hot_                (-1),
  y_hot_                (-1)
 {
+  setObjectName("CQPixmap");
+
   undo_ = new CUndo;
 
   drawFont_ = font();
@@ -716,6 +718,7 @@ CQPixmap::
 createCentralWidget()
 {
   QWidget *widget = new QWidget;
+  widget->setObjectName("centralWidget");
 
   QHBoxLayout *layout = new QHBoxLayout(widget);
   layout->setMargin(2); layout->setSpacing(2);
@@ -723,6 +726,7 @@ createCentralWidget()
   //-------
 
   controlArea_ = new QWidget;
+  controlArea_->setObjectName("controlArea");
 
   layout->addWidget(controlArea_);
 
@@ -786,6 +790,7 @@ createCentralWidget()
   //------
 
   QWidget *scroll_buttons = new QWidget;
+  scroll_buttons->setObjectName("scroll_buttons");
 
   controlLayout->addWidget(scroll_buttons);
 
@@ -895,6 +900,7 @@ createCentralWidget()
   //-------
 
   QWidget *color_canvas = new QWidget;
+  color_canvas->setObjectName("color_canvas");
 
   layout->addWidget(color_canvas);
 
@@ -904,18 +910,19 @@ createCentralWidget()
   //-------
 
   QWidget *colorControl = new QWidget;
+  colorControl->setObjectName("colorControl");
 
   colorControl->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
   color_canvas_layout->addWidget(colorControl);
 
   QHBoxLayout *colorControlLayout = new QHBoxLayout(colorControl);
-
   colorControlLayout->setMargin(2); colorControlLayout->setSpacing(2);
 
   //---
 
   QFrame *fg_bg_control = new QFrame;
+  fg_bg_control->setObjectName("fg_bg_control");
 
   fg_bg_control->setFrameShape (QFrame::Panel);
   fg_bg_control->setFrameShadow(QFrame::Sunken);
@@ -926,6 +933,7 @@ createCentralWidget()
   fg_bg_controlLayout->setMargin(2); fg_bg_controlLayout->setSpacing(2);
 
   QWidget *fg_control = new QWidget;
+  fg_control->setObjectName("fg_control");
 
   fg_bg_controlLayout->addWidget(fg_control);
 
@@ -940,6 +948,7 @@ createCentralWidget()
   fg_controlLayout->addWidget(fg_button_);
 
   QWidget *bg_control = new QWidget;
+  bg_control->setObjectName("bg_control");
 
   fg_bg_controlLayout->addWidget(bg_control);
 
@@ -958,10 +967,12 @@ createCentralWidget()
   //---
 
   color_stack_ = new QStackedWidget;
+  color_stack_->setObjectName("color_stack");
 
   colorControlLayout->addWidget(color_stack_);
 
   QFrame *colormap_widget = new QFrame;
+  colormap_widget->setObjectName("colormap_widget");
 
   colormap_widget->setFrameShape (QFrame::Panel);
   colormap_widget->setFrameShadow(QFrame::Sunken);
@@ -974,6 +985,7 @@ createCentralWidget()
   //---
 
   QFrame *colorrgb_widget = new QFrame;
+  colorrgb_widget->setObjectName("colorrgb_widget");
 
   colorrgb_widget->setFrameShape (QFrame::Panel);
   colorrgb_widget->setFrameShadow(QFrame::Sunken);
@@ -997,6 +1009,7 @@ createCentralWidget()
   //---
 
   QFrame *thumbnail_frame = new QFrame;
+  thumbnail_frame->setObjectName("thumbnail_frame");
 
   thumbnail_frame->setFrameShape (QFrame::Panel);
   thumbnail_frame->setFrameShadow(QFrame::Sunken);
@@ -1007,12 +1020,14 @@ createCentralWidget()
   thumbnail_layout->setMargin(2); thumbnail_layout->setSpacing(2);
 
   thumbnail_canvas_ = new CQThumbnailCanvas(this);
+  thumbnail_canvas_->setObjectName("thumbnail_canvas");
 
   thumbnail_layout->addWidget(thumbnail_canvas_);
 
   //-------
 
   QFrame *canvas_frame = new QFrame;
+  canvas_frame->setObjectName("canvas_frame");
 
   canvas_frame->setFrameShape (QFrame::Panel);
   canvas_frame->setFrameShadow(QFrame::Sunken);
@@ -1162,7 +1177,7 @@ CQPixmap::
 saveImage()
 {
 #if 0
-  CFileType type = getImageTypeFromName(filename_);
+  CFileType type = CFileUtil::getImageTypeFromName(filename_);
 
   if (type == CFILE_TYPE_NONE)
     type = CFILE_TYPE_IMAGE_XPM;
@@ -2016,10 +2031,14 @@ initColors()
       ++num_added;
     }
 
+    //---
+
     if (num_added < 8) {
       for (int i = num_added; i < 8; ++i)
         addColorSpacer(i);
     }
+
+    //---
 
     setFgColorNum         (black_color_num);
     setBgColorNum         (white_color_num);
@@ -2187,7 +2206,9 @@ getPixmap()
 
       startPainter();
 
-      painter_->fillRect(0, 0, canvas_width, canvas_height, QColor(178,178,178));
+      QColor color(178,178,178);
+
+      painter_->fillRect(0, 0, canvas_width, canvas_height, color);
 
       painter_->fillRect(0, 0, width*grid_size_, height*grid_size_, QBrush(Qt::Dense6Pattern));
 
@@ -2625,7 +2646,9 @@ drawCanvasRect(int x, int y, Qt::BrushStyle brushStyle)
 
   startPainter();
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, QColor(196,196,196));
+  QColor c(196,196,196);
+
+  painter_->fillRect(px, py, grid_size_, grid_size_, c);
 
   QBrush brush;
 
@@ -2666,7 +2689,7 @@ drawXorCanvasPoint(int x, int y)
   else
     c = getColor();
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, QColor(c));
+  painter_->fillRect(px, py, grid_size_, grid_size_, c);
 
   if (grid_ && grid_size_ > 4) {
     QColor color(255,255,255);

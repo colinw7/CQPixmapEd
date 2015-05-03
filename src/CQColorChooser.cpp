@@ -14,6 +14,10 @@ void
 CQColorChooser::
 init()
 {
+  setObjectName("colorChooser");
+
+  setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
   color_     = QColor(1,2,3);
   alpha_     = 0.456;
   colorName_ = "abcdef";
@@ -21,7 +25,7 @@ init()
   //-----
 
   QHBoxLayout *layout = new QHBoxLayout(this);
-  layout->setMargin(2); layout->setSpacing(2);
+  layout->setMargin(0); layout->setSpacing(2);
 
   cedit_ = new QLineEdit(this); // text color
 

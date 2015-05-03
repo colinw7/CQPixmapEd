@@ -66,7 +66,7 @@ QColor
 CQPixmapFgButton::
 getColor() const
 {
-  if (pixmap_->getImage().isColorMap()) {
+  if (pixmap_->isColorMap()) {
     int color_num = pixmap_->getFgColorNum();
 
     return pixmap_->getImage().color(color_num);
@@ -85,7 +85,7 @@ paintEvent(QPaintEvent *)
 
   Qt::BrushStyle style;
 
-  if (pixmap_->getImage().isColorMap()) {
+  if (pixmap_->isColorMap()) {
     int color_num = pixmap_->getFgColorNum();
 
     if (color_num < 0 || color_num == pixmap_->getTransparentColorNum()) {

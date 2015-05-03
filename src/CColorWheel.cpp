@@ -357,9 +357,9 @@ rgbToPos(const QColor &rgb, int &wx, int &wy, int &sx, int &sy) const
 
   QColor hsv = rgb.toHsv();
 
-  double h = rgb.hue       ()/360.0;
-  double s = rgb.saturation()/255.0;
-  double v = rgb.value     ()/255.0;
+  double h = hsv.hue       ()/360.0;
+  double s = hsv.saturation()/255.0;
+  double v = hsv.value     ()/255.0;
 
   if      (control_type_ == CONTROL_RED) {
     wx = int(xc_ + (2*g - 1)*tradius_);
@@ -402,8 +402,6 @@ rgbToPos(const QColor &rgb, int &wx, int &wy, int &sx, int &sy) const
 
     wx = int(xc_ + r*cos(a));
     wy = int(yc_ - r*sin(a));
-
-    double v = hsv.value()/255.0;
 
     sy = int(yc_ + (1 - 2*v)*tradius_);
   }

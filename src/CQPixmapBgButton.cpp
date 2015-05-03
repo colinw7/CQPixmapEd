@@ -66,7 +66,7 @@ QColor
 CQPixmapBgButton::
 getColor() const
 {
-  if (pixmap_->getImage().isColorMap()) {
+  if (pixmap_->isColorMap()) {
     int color_num = pixmap_->getBgColorNum();
 
     return pixmap_->getImage().color(color_num);
@@ -85,7 +85,7 @@ paintEvent(QPaintEvent *)
 
   Qt::BrushStyle style;
 
-  if (pixmap_->getImage().isColorMap()) {
+  if (pixmap_->isColorMap()) {
     int color_num = pixmap_->getBgColorNum();
 
     if (color_num < 0)
@@ -109,9 +109,9 @@ paintEvent(QPaintEvent *)
   painter.fillRect(0, 0, size_, size_, brush);
 
   if (pixmap_->isBgActive()) {
-    QColor color = CQPixmapImage::toBW(CQPixmapImage::inverse(color));
+    QColor color1 = CQPixmapImage::toBW(CQPixmapImage::inverse(color));
 
-    painter.setPen(color);
+    painter.setPen(color1);
 
     painter.drawRect(0, 0, size_ - 1, size_ - 1);
   }

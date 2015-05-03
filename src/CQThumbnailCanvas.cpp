@@ -45,8 +45,6 @@ paintEvent(QPaintEvent *)
 
   double s = double(size - 1)/(canvas_size - 1);
 
-  QColor rgba;
-
   for (int j = 0; j < canvas_size; ++j) {
     int y = int(j*s);
 
@@ -57,12 +55,12 @@ paintEvent(QPaintEvent *)
 
       if (x >= width) continue;
 
-      if (! transparent && image.isTransparent(x, y))
-        rgba = bg;
-      else
-        rgba = image.colorPixel(x, y);
+      QColor color;
 
-      QColor color = rgba;
+      if (! transparent && image.isTransparent(x, y))
+        color = bg;
+      else
+        color = image.colorPixel(x, y);
 
       painter.setPen(color);
 

@@ -46,10 +46,14 @@ class CQPixmapColorButtonTip : public CQToolTipIFace {
   CQPixmapColorTip    *widget_;
 };
 
+//------
+
 CQPixmapColorButton::
 CQPixmapColorButton(CQPixmap *pixmap, int color_num) :
  pixmap_(pixmap), color_num_(color_num), size_(16)
 {
+  setObjectName(QString("color_%1").arg(color_num));
+
   setFixedSize(size_, size_);
 
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -76,19 +80,17 @@ paintEvent(QPaintEvent *)
 {
   QPainter painter(this);
 
-  QColor         rgba;
+  QColor         color;
   Qt::BrushStyle style;
 
   if (color_num_ == pixmap_->getTransparentColorNum()) {
-    rgba  = QColor(0,0,0);
+    color = QColor(0,0,0);
     style = Qt::Dense6Pattern;
   }
   else {
-    rgba  = getColor();
+    color = getColor();
     style = Qt::SolidPattern;
   }
-
-  QColor color = rgba;
 
   QBrush brush;
 

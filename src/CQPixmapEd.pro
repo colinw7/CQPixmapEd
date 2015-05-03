@@ -10,20 +10,21 @@ QT += widgets
 
 # Input
 SOURCES += \
-CQPixmapEdMain.cpp \
-CQPixmapEd.cpp \
 CQPixmapAddColorDialog.cpp \
 CQPixmapBgButton.cpp \
 CQPixmapCanvas.cpp \
 CQPixmapColorButton.cpp \
+CQPixmapEd.cpp \
+CQPixmapEdMain.cpp \
 CQPixmapFgButton.cpp \
+CQPixmapImage.cpp \
 CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
-CQPixmapImage.cpp \
 CQThumbnailCanvas.cpp \
-CQColorWheel.cpp \
 CColorWheel.cpp \
+CQColorChooser.cpp \
+CQColorWheel.cpp \
 CQToolTip.cpp \
 
 HEADERS += \
@@ -31,15 +32,18 @@ CQPixmapAddColorDialog.h \
 CQPixmapBgButton.h \
 CQPixmapCanvas.h \
 CQPixmapColorButton.h \
+CQPixmapColorTip.h \
 CQPixmapEd.h \
 CQPixmapFgButton.h \
+CQPixmapImage.h \
 CQPixmapRescaleDialog.h \
 CQPixmapResizeDialog.h \
 CQPixmapTextDialog.h \
-CQPixmapImage.h \
+CQPixmapTipSwatch.h \
 CQThumbnailCanvas.h \
-CQColorWheel.h \
 CColorWheel.h \
+CQColorChooser.h \
+CQColorWheel.h \
 CQToolTip.h \
 
 DESTDIR     = ../bin
