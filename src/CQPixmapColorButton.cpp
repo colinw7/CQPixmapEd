@@ -9,41 +9,41 @@
 class CQPixmapColorButtonTip : public CQToolTipIFace {
  public:
   CQPixmapColorButtonTip(CQPixmapColorButton *button) :
-   button_(button), widget_(0) {
+   button_(button), tip_(0) {
   }
 
  ~CQPixmapColorButtonTip() {
-    delete widget_;
+    delete tip_;
   }
 
   QWidget *showWidget() {
-    if (! widget_)
-      widget_ = new CQPixmapColorTip;
+    if (! tip_)
+      tip_ = new CQPixmapColorTip;
 
     updateWidget();
 
-    return widget_;
+    return tip_;
   }
 
   void hideWidget() {
-    delete widget_;
+    delete tip_;
 
-    widget_ = 0;
+    tip_ = 0;
   }
 
   //bool trackMouse() const { return true; }
 
   void updateWidget() {
-    if (! widget_) return;
+    if (! tip_) return;
 
     QColor c = button_->getColor();
 
-    widget_->setColor(c);
+    tip_->setColor(c);
   }
 
  private:
   CQPixmapColorButton *button_;
-  CQPixmapColorTip    *widget_;
+  CQPixmapColorTip    *tip_;
 };
 
 //------

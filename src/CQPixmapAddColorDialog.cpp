@@ -9,6 +9,8 @@ CQPixmapAddColorDialog::
 CQPixmapAddColorDialog(QWidget *parent) :
  QDialog(parent)
 {
+  setWindowTitle("Add Color");
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 

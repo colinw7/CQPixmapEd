@@ -10,6 +10,8 @@ CQPixmapTextDialog::
 CQPixmapTextDialog(QWidget *parent) :
  QDialog(parent)
 {
+  setWindowTitle("Set Text");
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 

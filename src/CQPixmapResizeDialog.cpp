@@ -10,6 +10,8 @@ CQPixmapResizeDialog::
 CQPixmapResizeDialog(QWidget *parent) :
  QDialog(parent)
 {
+  setWindowTitle("Resize");
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 
