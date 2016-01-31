@@ -3,8 +3,8 @@
 
 #include <QDialog>
 
+class CQIntegerEdit;
 class QCheckBox;
-class QLineEdit;
 
 class CQPixmapRescaleDialog : public QDialog {
   Q_OBJECT
@@ -21,9 +21,9 @@ class CQPixmapRescaleDialog : public QDialog {
   void rescale(int width, int height, bool keep_aspect);
 
  private:
-  QLineEdit *width_edit_;
-  QLineEdit *height_edit_;
-  QCheckBox *aspect_;
+  CQIntegerEdit *width_edit_;
+  CQIntegerEdit *height_edit_;
+  QCheckBox     *aspect_;
 };
 
 #endif

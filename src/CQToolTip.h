@@ -13,13 +13,26 @@ class CQToolTipIFace {
 
   virtual ~CQToolTipIFace() { }
 
-  virtual QWidget *showWidget() = 0;
+  virtual bool canTip(const QPoint &) const { return true; }
+
+  virtual QWidget *showWidget(const QPoint &pos) = 0;
 
   virtual void hideWidget() { }
 
-  virtual void updateWidget() { }
+  virtual bool updateWidget(const QPoint &) { return true; }
 
   virtual bool trackMouse() const { return false; }
+
+  virtual double hideSecs() const { return -1; }
+
+  virtual int    margin () const { return -1; }
+  virtual double opacity() const { return -1; }
+
+  virtual bool isTransparent() const { return false; }
+
+  virtual Qt::Alignment alignment() const { return Qt::AlignLeft | Qt::AlignTop; }
+
+  virtual bool outside() const { return false; }
 };
 
 class CQToolTipWidgetIFace : public CQToolTipIFace {
@@ -28,7 +41,7 @@ class CQToolTipWidgetIFace : public CQToolTipIFace {
     w_(w) {
   }
 
-  virtual QWidget *showWidget() { return w_; }
+  virtual QWidget *showWidget(const QPoint &) { return w_; }
 
  private:
   typedef QPointer<QWidget> QWidgetP;
@@ -40,12 +53,12 @@ class CQToolTip : public QWidget {
   Q_OBJECT
 
  public:
+  static CQToolTipIFace *getToolTip(QWidget *w);
+
   static void setToolTip(QWidget *parent, QWidget *tooltip);
   static void setToolTip(QWidget *parent, CQToolTipIFace *tooltip);
 
   static void unsetToolTip(QWidget *parent);
-
-  CQToolTipIFace *getToolTip(QWidget *w) const;
 
  protected:
   static CQToolTip *getInstance();
@@ -70,6 +83,12 @@ class CQToolTip : public QWidget {
 
   void startHideTimer();
 
+  void updateSize();
+
+  void updateOpacity(CQToolTipIFace *tooltip);
+
+  QSize sizeHint() const;
+
  private slots:
   void hideSlot();
 
@@ -82,8 +101,10 @@ class CQToolTip : public QWidget {
   WidgetMap    tooltips_;
   QWidgetP     tooltip_;
   QWidgetP     parent_;
-  int          hideSecs_;
+  double       hideSecs_;
   int          hideTimer_;
+  int          margin_;
+  double       opacity_;
 };
 
 #endif

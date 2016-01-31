@@ -1,10 +1,7 @@
 #include <CQPixmapResizeDialog.h>
-
-#include <QLineEdit>
+#include <CQLayout.h>
+#include <CQIntegerEdit.h>
 #include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 CQPixmapResizeDialog::
 CQPixmapResizeDialog(QWidget *parent) :
@@ -20,7 +17,7 @@ CQPixmapResizeDialog(QWidget *parent) :
 
   QLabel *width_label = new QLabel("Width");
 
-  width_edit_ = new QLineEdit;
+  width_edit_ = new CQIntegerEdit;
 
   width_layout->addWidget(width_label);
   width_layout->addWidget(width_edit_);
@@ -32,7 +29,7 @@ CQPixmapResizeDialog(QWidget *parent) :
 
   QLabel *height_label = new QLabel("Height");
 
-  height_edit_ = new QLineEdit;
+  height_edit_ = new CQIntegerEdit;
 
   height_layout->addWidget(height_label);
   height_layout->addWidget(height_edit_);
@@ -58,18 +55,15 @@ void
 CQPixmapResizeDialog::
 init(int width, int height)
 {
-  width_edit_ ->setText(QString("%1").arg(width ));
-  height_edit_->setText(QString("%1").arg(height));
+  width_edit_ ->setValue(width);
+  height_edit_->setValue(height);
 }
 
 void
 CQPixmapResizeDialog::
 accept()
 {
-  int w = width_edit_ ->text().toInt();
-  int h = height_edit_->text().toInt();
-
-  emit resize(w, h);
+  emit resize(width_edit_->getValue(), height_edit_->getValue());
 
   close();
 }

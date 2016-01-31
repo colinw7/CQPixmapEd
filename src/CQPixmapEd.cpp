@@ -21,7 +21,6 @@
 #include <QFontDialog>
 #include <QStatusBar>
 #include <QStackedWidget>
-#include <QToolButton>
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
@@ -30,12 +29,22 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 
-#include <CUndo.h>
-#include <CBresenham.h>
-#include <CQColorWheel.h>
-#include <CQColorChooser.h>
+#include <CQImageButton.h>
+#include <CQUtil.h>
+#include <CQFont.h>
+#include <CQIntegerEdit.h>
 
-#include <cmath>
+#include <CUndo.h>
+#include <CFileUtil.h>
+#include <CImageXPM.h>
+#include <CBresenham.h>
+#if 0
+#include <CQColorWheel.h>
+#else
+#include <CQColorSelector.h>
+#endif
+#include <CQColorChooser.h>
+#include <CRGBName.h>
 
 #include <xpm/fliph.xpm>
 #include <xpm/flipv.xpm>
@@ -62,13 +71,108 @@
 #include <xpm/circle.xpm>
 #include <xpm/fill_circle.xpm>
 #include <xpm/fill.xpm>
+#include <xpm/largest_rect.xpm>
 #include <xpm/text.xpm>
 #include <xpm/hot_spot.xpm>
 #include <xpm/undo_16.xpm>
 #include <xpm/redo_16.xpm>
 
+//-----
+
+class CQPixmapStatusLabel : public QLabel {
+ public:
+  CQPixmapStatusLabel(const QString &str);
+};
+
+//-----
+
+class CQPixmapGridSize : public QWidget {
+ public:
+  CQPixmapGridSize(CQPixmap *pixmap);
+
+  void update();
+
+ private:
+  CQPixmap *pixmap_;
+  QLabel   *label_;
+  QSpinBox *spin_;
+};
+
+//-----
+
+class CQPixmapFilenameLabel : public QWidget {
+ public:
+  CQPixmapFilenameLabel(CQPixmap *pixmap);
+
+  void update();
+
+ private:
+  CQPixmap *pixmap_;
+  QLabel   *label_;
+  QLabel   *fileName_;
+};
+
+//-----
+
+class CQPixmapSizeLabel : public QWidget {
+ public:
+  CQPixmapSizeLabel(CQPixmap *pixmap);
+
+  void update();
+
+ private:
+  CQPixmap *pixmap_;
+  QLabel   *label_;
+  QLabel   *size_;
+};
+
+//-----
+
+class CQPixmapPosLabel : public QWidget {
+ public:
+  CQPixmapPosLabel(CQPixmap *pixmap);
+
+  void update(int x, int y);
+
+ private:
+  CQPixmap *pixmap_;
+  QLabel   *label_;
+  QLabel   *pos_;
+};
+
+//-----
+
+class CQPixmapFgControl : public QWidget {
+ public:
+  CQPixmapFgControl(CQPixmap *pixmap);
+
+  void update();
+
+ private:
+  CQPixmap         *pixmap_;
+  QLabel           *label_;
+  CQPixmapFgButton *button_;
+};
+
+//-----
+
+class CQPixmapBgControl : public QWidget {
+ public:
+  CQPixmapBgControl(CQPixmap *pixmap);
+
+  void update();
+
+ private:
+  CQPixmap         *pixmap_;
+  QLabel           *label_;
+  CQPixmapBgButton *button_;
+};
+
+//-----
+
 CQPixmap::
 CQPixmap() :
+ color_mode_           (COLOR_MAP),
  function_             (FUNCTION_POINT),
  xor_mode_             (XOR_NONE),
  filename_             ("scratch"),
@@ -78,7 +182,7 @@ CQPixmap() :
  painter_depth_        (0),
  changed_              (true),
  grid_                 (true),
- grid_size_            (1),
+ gridSize_             (1),
  bg_color_num_         (0),
  fg_color_num_         (1),
  transparent_color_num_(2),
@@ -87,6 +191,8 @@ CQPixmap() :
  color_num_            (0),
  color_                (QColor(255,255,255)),
  fg_active_            (true),
+ numColorColumns_      (32),
+ color_spacer_         (0),
  x_hot_                (-1),
  y_hot_                (-1)
 {
@@ -105,7 +211,8 @@ setBgColorNum(int color_num)
   if (color_num != bg_color_num_) {
     bg_color_num_ = color_num;
 
-    bg_button_->update();
+    if (bgControl_)
+      bgControl_->update();
 
     thumbnail_canvas_->update();
 
@@ -115,12 +222,22 @@ setBgColorNum(int color_num)
 
 void
 CQPixmap::
+setNumColorColumns(int i)
+{
+  numColorColumns_ = i;
+
+  initColors();
+}
+
+void
+CQPixmap::
 setFgColorNum(int color_num)
 {
   if (color_num != fg_color_num_) {
     fg_color_num_ = color_num;
 
-    fg_button_->update();
+    if (fgControl_)
+      fgControl_->update();
 
     updateStatusMessage();
   }
@@ -133,9 +250,16 @@ setBgColor(const QColor &c)
   if (c != bg_color_) {
     bg_color_ = c;
 
-    bg_button_->update();
+    if (bgControl_)
+      bgControl_->update();
 
-    color_wheel_->setRGB(bg_color_);
+    if (! fg_active_) {
+#if 0
+    color_wheel_->setRGB(CQUtil::colorToRGBA(bg_color_));
+#else
+    color_selector_->setColor(bg_color_);
+#endif
+    }
 
     thumbnail_canvas_->update();
 
@@ -150,9 +274,16 @@ setFgColor(const QColor &c)
   if (c != fg_color_) {
     fg_color_ = c;
 
-    color_wheel_->setRGB(fg_color_);
+    if (fg_active_) {
+#if 0
+      color_wheel_->setRGB(CQUtil::colorToRGBA(fg_color_));
+#else
+      color_selector_->setColor(fg_color_);
+#endif
+    }
 
-    fg_button_->update();
+    if (fgControl_)
+      fgControl_->update();
 
     updateStatusMessage();
   }
@@ -171,13 +302,23 @@ setFgActive(bool active)
 {
   fg_active_ = active;
 
-  fg_button_->update();
-  bg_button_->update();
+  if (fgControl_)
+    fgControl_->update();
 
+  if (bgControl_)
+    bgControl_->update();
+
+#if 0
   if (fg_active_)
-    color_wheel_->setRGB(getFgColor());
+    color_wheel_->setRGB(CQUtil::colorToRGBA(getFgColor()));
   else
-    color_wheel_->setRGB(getBgColor());
+    color_wheel_->setRGB(CQUtil::colorToRGBA(getBgColor()));
+#else
+  if (fg_active_)
+    color_selector_->setColor(getFgColor());
+  else
+    color_selector_->setColor(getBgColor());
+#endif
 }
 
 void
@@ -185,6 +326,17 @@ CQPixmap::
 setChanged()
 {
   changed_ = true;
+}
+
+void
+CQPixmap::
+init()
+{
+  createCentralWidget();
+
+  createMenus    ();
+  createToolBars ();
+  createStatusBar();
 }
 
 void
@@ -450,6 +602,16 @@ createMenus()
 
   //----
 
+  largestRectItem_ = new QAction("&Largest Rect", this); functionMenu->addAction(largestRectItem_);
+  largestRectItem_->setCheckable(true);
+
+  largestRectItem_->setStatusTip("Largest Rectangle");
+  largestRectItem_->setIcon(QPixmap(largest_rect_data));
+
+  connect(largestRectItem_, SIGNAL(toggled(bool)), this, SLOT(setLargestRectMode()));
+
+  //----
+
   textItem_ = new QAction("&Text", this); functionMenu->addAction(textItem_);
   textItem_->setCheckable(true);
 
@@ -687,6 +849,7 @@ createToolBars()
   functionToolBar_->addAction(circleItem_);
   functionToolBar_->addAction(fillCircleItem_);
   functionToolBar_->addAction(floodFillItem_);
+  functionToolBar_->addAction(largestRectItem_);
   functionToolBar_->addAction(textItem_);
   functionToolBar_->addAction(hotSpotItem_);
 
@@ -797,15 +960,15 @@ createCentralWidget()
   QGridLayout *scroll_buttons_layout = new QGridLayout(scroll_buttons);
   scroll_buttons_layout->setMargin(2); scroll_buttons_layout->setSpacing(2);
 
-  QToolButton *flip_x_button  = new QToolButton; flip_x_button ->setIcon(QPixmap(fliph_xpm));
-  QToolButton *flip_y_button  = new QToolButton; flip_y_button ->setIcon(QPixmap(flipv_xpm));
-  QToolButton *fold_button    = new QToolButton; fold_button   ->setIcon(QPixmap(fold_xpm));
-  QToolButton *up_button      = new QToolButton; up_button     ->setIcon(QPixmap(up_xpm));
-  QToolButton *down_button    = new QToolButton; down_button   ->setIcon(QPixmap(down_xpm));
-  QToolButton *left_button    = new QToolButton; left_button   ->setIcon(QPixmap(left_xpm));
-  QToolButton *right_button   = new QToolButton; right_button  ->setIcon(QPixmap(right_xpm));
-  QToolButton *rrotate_button = new QToolButton; rrotate_button->setIcon(QPixmap(rotater_xpm));
-  QToolButton *lrotate_button = new QToolButton; lrotate_button->setIcon(QPixmap(rotatel_xpm));
+  CQImageButton *flip_x_button  = new CQImageButton(QPixmap(fliph_xpm));
+  CQImageButton *flip_y_button  = new CQImageButton(QPixmap(flipv_xpm));
+  CQImageButton *fold_button    = new CQImageButton(QPixmap(fold_xpm));
+  CQImageButton *up_button      = new CQImageButton(QPixmap(up_xpm));
+  CQImageButton *down_button    = new CQImageButton(QPixmap(down_xpm));
+  CQImageButton *left_button    = new CQImageButton(QPixmap(left_xpm));
+  CQImageButton *right_button   = new CQImageButton(QPixmap(right_xpm));
+  CQImageButton *rrotate_button = new CQImageButton(QPixmap(rotater_xpm));
+  CQImageButton *lrotate_button = new CQImageButton(QPixmap(rotatel_xpm));
 
   scroll_buttons_layout->addWidget(flip_x_button , 0, 0);
   scroll_buttons_layout->addWidget(flip_y_button , 0, 2);
@@ -877,6 +1040,12 @@ createCentralWidget()
 
   controlLayout->addWidget(floodFillFunction_);
 
+  largestRectFunction_ = new QRadioButton("largestRectl");
+
+  connect(largestRectFunction_, SIGNAL(clicked()), this, SLOT(setLargestRectMode()));
+
+  controlLayout->addWidget(largestRectFunction_);
+
   textFunction_ = new QRadioButton("Text");
 
   connect(textFunction_, SIGNAL(clicked()), this, SLOT(setTextMode()));
@@ -912,7 +1081,7 @@ createCentralWidget()
   QWidget *colorControl = new QWidget;
   colorControl->setObjectName("colorControl");
 
-  colorControl->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  colorControl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
   color_canvas_layout->addWidget(colorControl);
 
@@ -921,6 +1090,7 @@ createCentralWidget()
 
   //---
 
+#if 0
   QFrame *fg_bg_control = new QFrame;
   fg_bg_control->setObjectName("fg_bg_control");
 
@@ -932,42 +1102,21 @@ createCentralWidget()
   QVBoxLayout *fg_bg_controlLayout = new QVBoxLayout(fg_bg_control);
   fg_bg_controlLayout->setMargin(2); fg_bg_controlLayout->setSpacing(2);
 
-  QWidget *fg_control = new QWidget;
-  fg_control->setObjectName("fg_control");
+  fgControl_ = new CQPixmapFgControl(this);
+  bgControl_ = new CQPixmapBgControl(this);
 
-  fg_bg_controlLayout->addWidget(fg_control);
-
-  QHBoxLayout *fg_controlLayout = new QHBoxLayout(fg_control);
-  fg_controlLayout->setMargin(2); fg_controlLayout->setSpacing(2);
-
-  QLabel *fg_label = new QLabel("Fg");
-
-  fg_button_ = new CQPixmapFgButton(this);
-
-  fg_controlLayout->addWidget(fg_label);
-  fg_controlLayout->addWidget(fg_button_);
-
-  QWidget *bg_control = new QWidget;
-  bg_control->setObjectName("bg_control");
-
-  fg_bg_controlLayout->addWidget(bg_control);
-
-  QHBoxLayout *bg_controlLayout = new QHBoxLayout(bg_control);
-  bg_controlLayout->setMargin(2); bg_controlLayout->setSpacing(2);
-
-  QLabel *bg_label = new QLabel("Bg");
-
-  bg_button_ = new CQPixmapBgButton(this);
-
-  bg_controlLayout->addWidget(bg_label);
-  bg_controlLayout->addWidget(bg_button_);
+  fg_bg_controlLayout->addWidget(fgControl_);
+  fg_bg_controlLayout->addWidget(bgControl_);
 
   fg_bg_controlLayout->addStretch();
+#endif
 
   //---
 
   color_stack_ = new QStackedWidget;
   color_stack_->setObjectName("color_stack");
+
+  color_stack_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   colorControlLayout->addWidget(color_stack_);
 
@@ -976,6 +1125,8 @@ createCentralWidget()
 
   colormap_widget->setFrameShape (QFrame::Panel);
   colormap_widget->setFrameShadow(QFrame::Sunken);
+
+  colormap_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   colormap_widget_layout_ = new QGridLayout(colormap_widget);
   colormap_widget_layout_->setMargin(2); colormap_widget_layout_->setSpacing(2);
@@ -993,6 +1144,7 @@ createCentralWidget()
   QHBoxLayout *colorrgb_widget_layout = new QHBoxLayout(colorrgb_widget);
   colorrgb_widget_layout->setMargin(2); colorrgb_widget_layout->setSpacing(2);
 
+#if 0
   color_wheel_ = new CQColorWheel(0, Qt::Horizontal, 100, false);
 
   connect(color_wheel_, SIGNAL(colorBgChanged()), this, SLOT(wheelBgColorChanged()));
@@ -1001,6 +1153,21 @@ createCentralWidget()
   colorrgb_widget_layout->addWidget(color_wheel_);
 
   color_stack_->insertWidget(1, colorrgb_widget);
+#else
+  CQColorSelector::Config selConfig;
+
+  selConfig.colorButton = false;
+  selConfig.colorEdit   = false;
+
+  color_selector_ = new CQColorSelector(0, selConfig);
+
+  color_selector_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+  connect(color_selector_, SIGNAL(colorChanged(const QColor &)),
+          this, SLOT(wheelColorChanged(const QColor &)));
+
+  color_stack_->insertWidget(1, color_selector_);
+#endif
 
   //---
 
@@ -1020,7 +1187,6 @@ createCentralWidget()
   thumbnail_layout->setMargin(2); thumbnail_layout->setSpacing(2);
 
   thumbnail_canvas_ = new CQThumbnailCanvas(this);
-  thumbnail_canvas_->setObjectName("thumbnail_canvas");
 
   thumbnail_layout->addWidget(thumbnail_canvas_);
 
@@ -1069,13 +1235,51 @@ void
 CQPixmap::
 createStatusBar()
 {
-  positionLabel_ = new QLabel("0, 0");
-
   QStatusBar *sbar = statusBar();
 
-  sbar->insertPermanentWidget(0, positionLabel_);
+  filenameLabel_ = new CQPixmapFilenameLabel(this);
 
-  updateStatusMessage();
+  sbar->insertPermanentWidget(0, filenameLabel_);
+
+  //---
+
+  QWidget *spacer = new QWidget;
+
+  sbar->insertPermanentWidget(1, spacer, 1);
+
+  //---
+
+  sizeLabel_ = new CQPixmapSizeLabel(this);
+
+  sbar->insertPermanentWidget(2, sizeLabel_);
+
+  //---
+
+  fgControl_ = new CQPixmapFgControl(this);
+
+  sbar->insertPermanentWidget(3, fgControl_);
+
+  bgControl_ = new CQPixmapBgControl(this);
+
+  sbar->insertPermanentWidget(4, bgControl_);
+
+  //---
+
+  gridSizeControl_ = new CQPixmapGridSize(this);
+
+  sbar->insertPermanentWidget(5, gridSizeControl_);
+
+  //---
+
+  positionLabel_ = new CQPixmapPosLabel(this);
+
+  sbar->insertPermanentWidget(6, positionLabel_);
+
+  //---
+
+  sbar->showMessage(" ");
+
+  //---
 
   connect(sbar, SIGNAL(messageChanged(const QString &)),
           this, SLOT(statusMessageChanged(const QString &)));
@@ -1093,13 +1297,14 @@ void
 CQPixmap::
 updateStatusMessage()
 {
+#if 0
   QString msg;
 
   QString bg_str, fg_str;
 
-  if (image_.isColorMap()) {
-    //bg = image_.color(getBgColorNum());
-    //fg = image_.color(getFgColorNum());
+  if (isColorMap()) {
+    //bg = image_->getColor(getBgColorNum());
+    //fg = image_->getColor(getFgColorNum());
 
     int bg_num = getBgColorNum();
 
@@ -1108,7 +1313,7 @@ updateStatusMessage()
     if (bg_num < 0)
       bg_str += "#0000000";
     else {
-      QColor bg = image_.color(bg_num);
+      QColor bg = CQUtil::rgbaToColor(image_->getColor(bg_num));
 
       bg_str += bg.name();
     }
@@ -1122,7 +1327,7 @@ updateStatusMessage()
     if (fg_num < 0)
       fg_str += "#0000000";
     else {
-      QColor fg = image_.color(fg_num);
+      QColor fg = CQUtil::rgbaToColor(image_->getColor(fg_num));
 
       fg_str += fg.name();
     }
@@ -1134,20 +1339,18 @@ updateStatusMessage()
     fg_str = fg_color_.name();
   }
 
-  msg = QString("Filename: %1, Size %2x%3, Grid Size %4, Bg %5, Fg %6").
-                arg(filename_.c_str()).arg(image_.width()).arg(image_.height()).
-                arg(grid_size_).arg(bg_str).arg(fg_str);
+  msg = QString("Filename: %1, Size %2x%3").
+                arg(filename_.c_str()).arg(image_->getWidth()).arg(image_->getHeight());
 
-  QStatusBar *sbar = statusBar();
-
-  sbar->showMessage(msg);
+  statusBar()->showMessage(msg);
+#endif
 }
 
 void
 CQPixmap::
 updatePosition(int x, int y)
 {
-  positionLabel_->setText(QString("%1, %2").arg(x).arg(y));
+  positionLabel_->update(x, y);
 }
 
 void
@@ -1176,14 +1379,12 @@ void
 CQPixmap::
 saveImage()
 {
-#if 0
   CFileType type = CFileUtil::getImageTypeFromName(filename_);
 
   if (type == CFILE_TYPE_NONE)
     type = CFILE_TYPE_IMAGE_XPM;
 
-  image_.write(filename_, type);
-#endif
+  image_->write(filename_, type);
 }
 
 void
@@ -1200,6 +1401,9 @@ promptSaveImage()
 
   saveImage();
 
+  if (filenameLabel_)
+    filenameLabel_->update();
+
   updateStatusMessage();
 }
 
@@ -1209,7 +1413,7 @@ promptResizeImage()
 {
   CQPixmapResizeDialog *dialog = new CQPixmapResizeDialog(this);
 
-  dialog->init(image_.width(), image_.height());
+  dialog->init(image_->getWidth(), image_->getHeight());
 
   connect(dialog, SIGNAL(resize(int, int)), this, SLOT(resizeImage(int, int)));
 
@@ -1222,7 +1426,7 @@ promptRescaleImage()
 {
   CQPixmapRescaleDialog *dialog = new CQPixmapRescaleDialog(this);
 
-  dialog->init(image_.width(), image_.height(), false);
+  dialog->init(image_->getWidth(), image_->getHeight(), false);
 
   connect(dialog, SIGNAL(rescale(int, int, bool)), this, SLOT(rescaleImage(int, int, bool)));
 
@@ -1255,29 +1459,31 @@ void
 CQPixmap::
 zoomIn()
 {
-  ++grid_size_;
-
-  grid_size_ = std::min(std::max(grid_size_, 1), 64);
-
-  setCanvasSize();
+  setGridSize(gridSize() + 1);
 }
 
 void
 CQPixmap::
 zoomOut()
 {
-  --grid_size_;
-
-  grid_size_ = std::min(std::max(grid_size_, 1), 64);
-
-  setCanvasSize();
+  setGridSize(gridSize() - 1);
 }
 
 void
 CQPixmap::
 zoomFull()
 {
-  grid_size_ = 1;
+  setGridSize(1);
+}
+
+void
+CQPixmap::
+setGridSize(int s)
+{
+  gridSize_ = std::min(std::max(s, 1), 64);
+
+  if (gridSizeControl_)
+    gridSizeControl_->update();
 
   setCanvasSize();
 }
@@ -1319,34 +1525,36 @@ void
 CQPixmap::
 setColorMap(bool active)
 {
-  setColorMode(active ? QImage::Format_Indexed8 : QImage::Format_ARGB32);
+  setColorMode(active ? COLOR_MAP : COLOR_RGB);
 }
 
 void
 CQPixmap::
 setColorRGB(bool active)
 {
-  setColorMode(active ? QImage::Format_ARGB32 : QImage::Format_Indexed8);
+  setColorMode(active ? COLOR_RGB : COLOR_MAP);
 }
 
 void
 CQPixmap::
-setColorMode(QImage::Format format, bool force)
+setColorMode(ColorMode mode)
 {
-  if (! force && format == image_.format())
+  if (mode == color_mode_)
     return;
 
-  color_stack_->setCurrentIndex(format == QImage::Format_Indexed8 ? 0 : 1);
+  color_mode_ = mode;
 
-  if (format == QImage::Format_Indexed8)
-    image_.convertToColorIndex();
+  color_stack_->setCurrentIndex(color_mode_ == COLOR_MAP ? 0 : 1);
+
+  if (isColorMap())
+    image_->convertToColorIndex();
   else
-    image_.convertToRGB();
+    image_->convertToRGB();
 
-  colorMapItem_->setChecked(format == QImage::Format_Indexed8);
-  colorRGBItem_->setChecked(format == QImage::Format_ARGB32  );
+  colorMapItem_->setChecked(color_mode_ == COLOR_MAP);
+  colorRGBItem_->setChecked(color_mode_ == COLOR_RGB);
 
-  addColorItem_->setEnabled(format == QImage::Format_Indexed8);
+  addColorItem_->setEnabled(color_mode_ == COLOR_MAP);
 
   setChanged();
 
@@ -1359,12 +1567,16 @@ void
 CQPixmap::
 addColorDialog()
 {
-  if (! image_.isColorMap())
+  if (! isColorMap())
     return;
 
   CQPixmapAddColorDialog *dialog = new CQPixmapAddColorDialog(this);
 
+#if 0
   connect(dialog, SIGNAL(addColor(const QString &)), this, SLOT(addColor(const QString &)));
+#else
+  connect(dialog, SIGNAL(addColor(const QColor &)), this, SLOT(addColor(const QColor &)));
+#endif
 
   dialog->show();
 }
@@ -1373,12 +1585,21 @@ void
 CQPixmap::
 addColor(const QString &name)
 {
-  if (! image_.isColorMap())
+  CRGBA rgba;
+
+  CRGBName::toRGBA(name.toStdString(), rgba);
+
+  addColor(CQUtil::rgbaToColor(rgba));
+}
+
+void
+CQPixmap::
+addColor(const QColor &c)
+{
+  if (! isColorMap())
     return;
 
-  QColor c(name);
-
-  image_.addColor(c);
+  image_->addColor(CQUtil::colorToRGBA(c));
 
   initColors();
 }
@@ -1415,10 +1636,10 @@ clear()
 {
   addUndoImage();
 
-  if (image_.isColorMap())
-    image_.fill(getBgColorNum());
+  if (isColorMap())
+    image_->setColorIndexData(getBgColorNum());
   else
-    image_.fill(getBgColor());
+    image_->setRGBAData(CQUtil::colorToRGBA(getBgColor()));
 
   setChanged();
 
@@ -1431,10 +1652,10 @@ set()
 {
   addUndoImage();
 
-  if (image_.isColorMap())
-    image_.fill(getFgColorNum());
+  if (isColorMap())
+    image_->setColorIndexData(getFgColorNum());
   else
-    image_.fill(getFgColor());
+    image_->setRGBAData(CQUtil::colorToRGBA(getFgColor()));
 
   setChanged();
 
@@ -1447,7 +1668,7 @@ invert()
 {
   addUndoImage();
 
-  image_.invert();
+  image_->invert();
 
   initColors();
 
@@ -1466,7 +1687,7 @@ unmark()
 
   redraw();
 
-  image_.resetWindow();
+  image_->resetWindow();
 }
 
 void
@@ -1475,7 +1696,7 @@ flipH()
 {
   addUndoImage();
 
-  image_.flipH();
+  image_->flipH();
 
   setChanged();
 
@@ -1488,7 +1709,7 @@ flipV()
 {
   addUndoImage();
 
-  image_.flipV();
+  image_->flipV();
 
   setChanged();
 
@@ -1501,8 +1722,7 @@ flipHV()
 {
   addUndoImage();
 
-  image_.flipH();
-  image_.flipV();
+  image_->flipHV();
 
   setChanged();
 
@@ -1515,7 +1735,7 @@ scrollLeft()
 {
   addUndoImage();
 
-  image_.scrollX(-1);
+  image_->scrollX(-1);
 
   setChanged();
 
@@ -1528,7 +1748,7 @@ scrollRight()
 {
   addUndoImage();
 
-  image_.scrollX(1);
+  image_->scrollX(1);
 
   setChanged();
 
@@ -1541,7 +1761,7 @@ scrollDown()
 {
   addUndoImage();
 
-  image_.scrollY(-1);
+  image_->scrollY(-1);
 
   setChanged();
 
@@ -1554,7 +1774,7 @@ scrollUp()
 {
   addUndoImage();
 
-  image_.scrollY(1);
+  image_->scrollY(1);
 
   setChanged();
 
@@ -1658,6 +1878,13 @@ setFloodFillMode()
 
 void
 CQPixmap::
+setLargestRectMode()
+{
+  updateFunction(FUNCTION_LARGEST_RECT);
+}
+
+void
+CQPixmap::
 setTextMode()
 {
   updateFunction(FUNCTION_TEXT);
@@ -1694,24 +1921,26 @@ updateFunction(Function function)
     case FUNCTION_CIRCLE          : circleFunction_         ->setChecked(true); break;
     case FUNCTION_FILLED_CIRCLE   : filledCircleFunction_   ->setChecked(true); break;
     case FUNCTION_FLOOD_FILL      : floodFillFunction_      ->setChecked(true); break;
+    case FUNCTION_LARGEST_RECT    : largestRectFunction_    ->setChecked(true); break;
     case FUNCTION_TEXT            : textFunction_           ->setChecked(true); break;
     case FUNCTION_SET_HOT_SPOT    : setHotSpotFunction_     ->setChecked(true); break;
     default                       :                                             break;
   }
 
-  copyItem_      ->setChecked(function_ == FUNCTION_COPY);
-  moveItem_      ->setChecked(function_ == FUNCTION_MOVE);
-  markItem_      ->setChecked(function_ == FUNCTION_MARK);
-  pointItem_     ->setChecked(function_ == FUNCTION_POINT);
-  curveItem_     ->setChecked(function_ == FUNCTION_CURVE);
-  lineItem_      ->setChecked(function_ == FUNCTION_LINE);
-  rectItem_      ->setChecked(function_ == FUNCTION_RECTANGLE);
-  fillRectItem_  ->setChecked(function_ == FUNCTION_FILLED_RECTANGLE);
-  circleItem_    ->setChecked(function_ == FUNCTION_CIRCLE);
-  fillCircleItem_->setChecked(function_ == FUNCTION_FILLED_CIRCLE);
-  floodFillItem_ ->setChecked(function_ == FUNCTION_FLOOD_FILL);
-  textItem_      ->setChecked(function_ == FUNCTION_TEXT);
-  hotSpotItem_   ->setChecked(function_ == FUNCTION_SET_HOT_SPOT);
+  copyItem_       ->setChecked(function_ == FUNCTION_COPY);
+  moveItem_       ->setChecked(function_ == FUNCTION_MOVE);
+  markItem_       ->setChecked(function_ == FUNCTION_MARK);
+  pointItem_      ->setChecked(function_ == FUNCTION_POINT);
+  curveItem_      ->setChecked(function_ == FUNCTION_CURVE);
+  lineItem_       ->setChecked(function_ == FUNCTION_LINE);
+  rectItem_       ->setChecked(function_ == FUNCTION_RECTANGLE);
+  fillRectItem_   ->setChecked(function_ == FUNCTION_FILLED_RECTANGLE);
+  circleItem_     ->setChecked(function_ == FUNCTION_CIRCLE);
+  fillCircleItem_ ->setChecked(function_ == FUNCTION_FILLED_CIRCLE);
+  floodFillItem_  ->setChecked(function_ == FUNCTION_FLOOD_FILL);
+  largestRectItem_->setChecked(function_ == FUNCTION_LARGEST_RECT);
+  textItem_       ->setChecked(function_ == FUNCTION_TEXT);
+  hotSpotItem_    ->setChecked(function_ == FUNCTION_SET_HOT_SPOT);
 
   guard = false;
 }
@@ -1730,50 +1959,66 @@ setHotSpot(int x, int y)
   x_hot_ = x;
   y_hot_ = y;
 
-  setHotSpot(std::min(x, 0), std::min(y, 0));
+  CImageXPMInst->setHotSpot(std::min(x, 0), std::min(y, 0));
 
   setChanged();
 
   redraw();
 }
 
+#if 0
 void
 CQPixmap::
 wheelBgColorChanged()
 {
-  setBgColor(color_wheel_->getRGB());
+  setBgColor(CQUtil::rgbaToColor(color_wheel_->getRGB()));
 }
 
 void
 CQPixmap::
 wheelFgColorChanged()
 {
-  setFgColor(color_wheel_->getRGB());
+  setFgColor(CQUtil::rgbaToColor(color_wheel_->getRGB()));
 }
+#else
+void
+CQPixmap::
+wheelColorChanged(const QColor &c)
+{
+  if (fg_active_)
+    setFgColor(c);
+  else
+    setBgColor(c);
+}
+#endif
 
 void
 CQPixmap::
 drawText(int x, int y)
 {
-  QImage image = CQPixmapImage::getStringImage(drawFont_, drawText_);
+  CFontPtr font = CQFontMgrInst->lookupFont(drawFont_);
 
-  int x1 = std::min(x + image.width () - 1, image_.width () - 1);
-  int y1 = std::min(y + image.height() - 1, image_.height() - 1);
+  CImagePtr image = font.cast<CQFont>()->getStringImage(drawText_.toStdString());
+
+  int x1 = std::min(x + image->getWidth () - 1, image_->getWidth () - 1);
+  int y1 = std::min(y + image->getHeight() - 1, image_->getHeight() - 1);
 
   addUndoImage(QRect(x, y, x1 - x + 1, y1 - y + 1));
 
-  if (image_.isColorMap()) {
-    image = CQPixmapImage::convertToColorIndex(image);
+  if (isColorMap()) {
+    CRGBA bg = image_->getColor(getTransparentColorNum());
+    CRGBA fg = image_->getColor(getColorNum());
 
-    QColor bg = image_.color(getTransparentColorNum());
-    QColor fg = image_.color(getFgColorNum());
+    image->twoColor(bg, fg);
 
-    CQPixmapImage::twoColor(image, bg, fg);
+    CImageCopyType old_type = CImage::setCopyType(CIMAGE_COPY_SKIP_TRANSPARENT);
 
-    image_.subCopyFrom(image, 0, 0, -1, -1, x, y, true);
+    drawImage(x, y, image);
+
+    CImage::setCopyType(old_type);
   }
   else
-    image_.subCopyFrom(image, 0, 0, -1, -1, x, y);
+    drawImage(x, y, image);
 
   setChanged();
 
@@ -1784,19 +2029,21 @@ void
 CQPixmap::
 newImage()
 {
-  QImage image = QImage(32, 32, QImage::Format_Indexed8);
+  CImageNameSrc src("CQPixmap::new_image");
 
-  image_.setImage(image);
+  image_ = CImageMgrInst->createImage(src);
 
-  if (image_.isColorMap()) {
-    image_.addColor(QColor(  0,  0,  0,255)); // black
-    image_.addColor(QColor(255,255,255,255)); // white
-    image_.addColor(QColor(  0,  0,  0,  0)); // transparent
+  image_->setDataSize(32, 32);
 
-    image_.fill(1U); // white
+  if (isColorMap()) {
+    image_->addColor(CRGBA(0,0,0,1)); // black
+    image_->addColor(CRGBA(1,1,1,1)); // white
+    image_->addColor(CRGBA(0,0,0,0)); // transparent
+
+    image_->setColorIndexData(1U); // white
   }
   else
-    image_.fill(QColor(255,255,255));
+    image_->setRGBAData(CRGBA(1,1,1));
 
   initImage();
 }
@@ -1805,54 +2052,54 @@ void
 CQPixmap::
 loadImage(const std::string &fileName)
 {
-  QImage image(fileName.c_str());
+  CImageFileSrc src(fileName);
 
-  if (image.isNull() || image.width() == 0 || image.height() == 0) {
-    image = QImage(32, 32, QImage::Format_Indexed8);
+  CImagePtr image = CImageMgrInst->createImage(src);
 
-    if (image.format() == QImage::Format_Indexed8) {
-      CQPixmapImage::addColor(image, QColor(  0,  0,  0,255)); // black
-      CQPixmapImage::addColor(image, QColor(255,255,255,255)); // white
-      CQPixmapImage::addColor(image, QColor(  0,  0,  0,  0)); // transparent
+  if (! image.isValid() || image->getWidth() == 0 || image->getHeight() == 0) {
+    image->setDataSize(32, 32);
 
-      image.fill(1U); // white
+    if (isColorMap()) {
+      image->addColor(CRGBA(0,0,0,1)); // black
+      image->addColor(CRGBA(1,1,1,1)); // white
+      image->addColor(CRGBA(0,0,0,0)); // transparent
+
+      image->setColorIndexData(1U); // white
     }
     else
-      image.fill(QColor(255,255,255));
+      image->setRGBAData(CRGBA(1,1,1));
   }
 
   loadImage(image);
 
   filename_ = fileName;
 
+  if (filenameLabel_)
+    filenameLabel_->update();
+
   updateStatusMessage();
 }
 
 void
 CQPixmap::
-loadImage(QImage image)
+loadImage(CImagePtr image)
 {
-  if (image.isNull())
+  if (! image.isValid())
     return;
 
   filename_ = "";
 
-  // convert to best format (minimum colors)
-  if (image.format() != QImage::Format_Indexed8 && image.format() != QImage::Format_ARGB32)
-    image = CQPixmapImage::convertToRGB(image);
+  image_ = image;
 
-  if (image.format() == QImage::Format_ARGB32) {
-    int ncolors = CQPixmapImage::countColors(image);
-
-    if (ncolors < 256)
-      image = CQPixmapImage::convertToColorIndex(image);
-  }
-
-  image_.setImage(image);
-
-  setColorMode(image_.format(), true);
+  if (image_->hasColormap())
+    setColorMode(COLOR_MAP);
+  else
+    setColorMode(COLOR_RGB);
 
   initImage();
+
+  if (filenameLabel_)
+    filenameLabel_->update();
 
   updateStatusMessage();
 }
@@ -1861,41 +2108,28 @@ void
 CQPixmap::
 insertImage(const std::string &fileName)
 {
-  QImage image(fileName.c_str());
+  CImageFileSrc src(fileName);
 
-  if (image.isNull())
+  CImagePtr image = CImageMgrInst->createImage(src);
+
+  if (! image.isValid())
     return;
 
-  // convert to best format (minimum colors)
-  if (image.format() != QImage::Format_Indexed8 && image.format() != QImage::Format_ARGB32)
-    image = CQPixmapImage::convertToRGB(image);
+  if (isColorMap()) {
+    image->convertToColorIndex();
 
-  if (image.format() == QImage::Format_ARGB32) {
-    int ncolors = CQPixmapImage::countColors(image);
-
-    if (ncolors < 256)
-      image = CQPixmapImage::convertToColorIndex(image);
-  }
-
-  // ensure common format
-  // TODO: count common colors for indexed
-  if      (image_.format() == QImage::Format_Indexed8 && image.format() == QImage::Format_ARGB32)
-    image_.convertToRGB();
-  else if (image.format() == QImage::Format_Indexed8 && image_.format() == QImage::Format_ARGB32)
-    image = CQPixmapImage::convertToRGB(image);
-
-  // add indexed colors (may overflow)
-  if (image_.format() == QImage::Format_Indexed8) {
-    int num_colors = image.colorCount();
+    int num_colors = image->getNumColors();
 
     for (int i = 0; i < num_colors; ++i)
-      image_.addColor(CQPixmapImage::color(image, i));
+      image_->addColor(image->getColor(i));
   }
+  else
+    image->convertToRGB();
 
   // draw image
   int left, bottom, right, top;
 
-  image_.getWindow(&left, &bottom, &right, &top);
+  image_->getWindow(&left, &bottom, &right, &top);
 
   drawImage(left, bottom, image);
 
@@ -1906,14 +2140,17 @@ void
 CQPixmap::
 initImage()
 {
-  int size = std::max(image_.width(), image_.height());
+  int size = std::max(image_->getWidth(), image_->getHeight());
 
   if (size > 0)
-    grid_size_ = std::max(256/size, 1);
+    setGridSize(std::max(256/size, 1));
 
   setCanvasSize();
 
   initColors();
+
+  if (sizeLabel_)
+    sizeLabel_->update();
 
   updateStatusMessage();
 }
@@ -1924,8 +2161,8 @@ setCanvasSize()
 {
   // resize image canvas
 
-  int width  = grid_size_*image_.width ();
-  int height = grid_size_*image_.height();
+  int width  = gridSize()*image_->getWidth ();
+  int height = gridSize()*image_->getHeight();
 
   delete pixmap_;
 
@@ -1938,6 +2175,9 @@ setCanvasSize()
   setChanged();
 
   canvas_->resize(width + 1, height + 1);
+
+  if (sizeLabel_)
+    sizeLabel_->update();
 
   updateStatusMessage();
 }
@@ -1955,22 +2195,26 @@ initColors()
 
   color_buttons_.clear();
 
+  delete color_spacer_;
+
+  color_spacer_ = 0;
+
   // Add new color buttons
 
-  if (image_.isColorMap()) {
-    int num_colors = image_.colorCount();
+  if (isColorMap()) {
+    int num_colors = image_->getNumColors();
 
     int black_color_num       = -1;
     int white_color_num       = -1;
     int transparent_color_num = -1;
 
     for (int i = 0; i < num_colors; ++i) {
-      QColor c = image_.color(i);
+      CRGBA rgba = image_->getColor(i);
 
-      int r = c.red  ();
-      int g = c.green();
-      int b = c.blue ();
-      int a = c.alpha();
+      int r = int(rgba.getRed  ()*255);
+      int g = int(rgba.getGreen()*255);
+      int b = int(rgba.getBlue ()*255);
+      int a = int(rgba.getAlpha()*255);
 
       if      (r ==   0 && g ==   0 && b ==   0 && a > 0)
         black_color_num = i;
@@ -1981,19 +2225,19 @@ initColors()
     }
 
     if (black_color_num == -1 && num_colors < 256) {
-      black_color_num = image_.addColor(QColor(0,0,0));
+      black_color_num = image_->addColor(CRGB(0));
 
       ++num_colors;
     }
 
     if (white_color_num == -1 && num_colors < 256) {
-      white_color_num = image_.addColor(QColor(255,255,255));
+      white_color_num = image_->addColor(CRGB(1));
 
       ++num_colors;
     }
 
     if (transparent_color_num == -1 && num_colors < 256) {
-      transparent_color_num = image_.addColor(QColor(0,0,0,0));
+      transparent_color_num = image_->addColor(CRGBA(0,0,0,0));
 
       ++num_colors;
     }
@@ -2018,7 +2262,7 @@ initColors()
       ++num_added;
     }
 
-    num_colors = image_.colorCount();
+    num_colors = image_->getNumColors();
 
     for (int i = 0; i < num_colors; ++i) {
       if (i == transparent_color_num ||
@@ -2040,6 +2284,16 @@ initColors()
 
     //---
 
+    int row = (num_colors + numColorColumns_ - 1)/numColorColumns_;
+
+    color_spacer_ = new QWidget;
+
+    color_spacer_->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+
+    colormap_widget_layout_->addWidget(color_spacer_, row, 0);
+
+    //---
+
     setFgColorNum         (black_color_num);
     setBgColorNum         (white_color_num);
     setTransparentColorNum(transparent_color_num);
@@ -2052,7 +2306,7 @@ addColorButton(int i)
 {
   CQPixmapColorButton *button = new CQPixmapColorButton(this, i);
 
-  colormap_widget_layout_->addWidget(button, i / 32, i % 32);
+  colormap_widget_layout_->addWidget(button, i / numColorColumns_, i % numColorColumns_);
 
   color_buttons_.push_back(button);
 }
@@ -2063,28 +2317,26 @@ addColorSpacer(int i)
 {
   QLabel *spacer = new QLabel(this);
 
-  colormap_widget_layout_->addWidget(spacer, i / 32, i % 32);
+  colormap_widget_layout_->addWidget(spacer, i / numColorColumns_, i % numColorColumns_);
 }
 
-QImage
+CImagePtr
 CQPixmap::
 getImage(int x, int y, int width, int height)
 {
-  return image_.subImage(x, y, width, height);
+  return image_->subImage(x, y, width, height);
 }
 
 void
 CQPixmap::
-drawImage(int x, int y, QImage image)
+drawImage(int x, int y, CImagePtr image)
 {
-  if (image.format() != image_.format()) {
-    if (image_.format() == QImage::Format_Indexed8)
-      image = CQPixmapImage::convertToColorIndex(image);
-    else
-      image = CQPixmapImage::convertToRGB(image);
-  }
+  if (isColorMap())
+    image->convertToColorIndex();
+  else
+    image->convertToRGB();
 
-  image_.subCopyFrom(image, 0, 0, -1, -1, x, y);
+  image_->subCopyFrom(image, 0, 0, -1, -1, x, y);
 }
 
 void
@@ -2093,7 +2345,7 @@ rotate(int angle)
 {
   int x1, y1, x2, y2;
 
-  image_.getWindow(&x1, &y1, &x2, &y2);
+  image_->getWindow(&x1, &y1, &x2, &y2);
 
   int width  = x2 - x1;
   int height = y2 - y1;
@@ -2105,9 +2357,9 @@ rotate(int angle)
   int xx2 = (x1 + x2 + size)/2;
   int yy2 = (y1 + y2 + size)/2;
 
-  image_.setWindow(xx1, yy1, xx2, yy2);
+  image_->setWindow(xx1, yy1, xx2, yy2);
 
-  QImage image = image_.rotate(angle);
+  CImagePtr image = image_->rotate(angle);
 
   drawImage(xx1, yy1, image);
 
@@ -2120,10 +2372,10 @@ void
 CQPixmap::
 floodFill(int x, int y)
 {
-  if (image_.isColorMap())
-    image_.floodFill(x, y, getFgColorNum());
+  if (isColorMap())
+    image_->floodFill(x, y, getColorNum());
   else
-    image_.floodFill(x, y, getFgColor());
+    image_->floodFill(x, y, CQUtil::colorToRGBA(getColor()));
 
   setChanged();
 
@@ -2132,12 +2384,28 @@ floodFill(int x, int y)
 
 void
 CQPixmap::
+largestRect(int x, int y)
+{
+#ifdef LARGEST_RECT
+  if (isColorMap())
+    image_->fillLargestRect(x, y, getColorNum());
+  else
+    image_->fillLargestRect(x, y, CQUtil::colorToRGBA(getColor()));
+
+  setChanged();
+
+  redraw();
+#endif
+}
+
+void
+CQPixmap::
 clear(int left, int bottom, int right, int top)
 {
-  if (image_.isColorMap())
-    image_.fill(left, bottom, right, top, getBgColorNum());
+  if (isColorMap())
+    image_->setColorIndexData(getBgColorNum(), left, bottom, right, top);
   else
-    image_.fill(left, bottom, right, top, getBgColor());
+    image_->setRGBAData(CQUtil::colorToRGBA(getBgColor()));
 
   setChanged();
 
@@ -2148,19 +2416,13 @@ void
 CQPixmap::
 resizeImage(int width, int height)
 {
-  QImage image = QImage(width, height, image_.format());
+  CImagePtr image = image_->dup();
 
-  if (image_.isColorMap()) {
-    int bg = CQPixmapImage::addColor(image, getBgColor());
+  image->setDataSize(width, height);
 
-    CQPixmapImage::fill(image, 0, 0, width - 1, height - 1, bg);
-  }
-  else
-    CQPixmapImage::fill(image, 0, 0, width - 1, height - 1, getBgColor());
+  image->subCopyFrom(image_, 0, 0, width, height);
 
-  image_.subCopyTo(0, 0, width, height, image);
-
-  image_.setImage(image);
+  image_ = image;
 
   setCanvasSize();
 }
@@ -2170,9 +2432,9 @@ CQPixmap::
 rescaleImage(int width, int height, bool keep_aspect)
 {
   if (keep_aspect)
-    image_.setImage(image_.resizeKeepAspect(width, height));
+    image_ = image_->resizeKeepAspect(width, height);
   else
-    image_.setImage(image_.resize(width, height));
+    image_ = image_->resize(width, height);
 
   setCanvasSize();
 
@@ -2199,8 +2461,8 @@ getPixmap()
       int canvas_width  = canvas_->width ();
       int canvas_height = canvas_->height();
 
-      int width  = image_.width ();
-      int height = image_.height();
+      int width  = image_->getWidth ();
+      int height = image_->getHeight();
 
       painter_ = pixmap_painter_;
 
@@ -2208,20 +2470,23 @@ getPixmap()
 
       QColor color(178,178,178);
 
-      painter_->fillRect(0, 0, canvas_width, canvas_height, color);
+      QBrush brush;
 
-      painter_->fillRect(0, 0, width*grid_size_, height*grid_size_, QBrush(Qt::Dense6Pattern));
+      brush.setColor(color);
+      brush.setStyle(Qt::SolidPattern);
+
+      painter_->fillRect(0, 0, canvas_width, canvas_height, brush);
 
       int y = 0;
 
-      for (int j = 0; j < height; ++j, y += grid_size_) {
-        if (y >= canvas_height || y + grid_size_ < 0)
+      for (int j = 0; j < height; ++j, y += gridSize()) {
+        if (y >= canvas_height || y + gridSize() < 0)
           continue;
 
         int x = 0;
 
-        for (int i = 0; i < width; ++i, x += grid_size_) {
-          if (x >= canvas_width || x + grid_size_ < 0)
+        for (int i = 0; i < width; ++i, x += gridSize()) {
+          if (x >= canvas_width || x + gridSize() < 0)
             continue;
 
           drawCanvasPoint(i, j);
@@ -2252,13 +2517,13 @@ getPixmap()
 
         windowToPixel(x_hot_, y_hot_, &px, &py);
 
-        QBrush brush;
+        QColor color(0,0,0);
 
-        brush.setColor(QColor(0,0,0));
+        brush.setColor(color);
         brush.setStyle(Qt::CrossPattern);
 
-        if (grid_size_ > 1)
-          painter_->fillRect(px, py, grid_size_, grid_size_, brush);
+        if (gridSize() > 1)
+          painter_->fillRect(px, py, gridSize(), gridSize(), brush);
         else
           painter_->drawPoint(px, py);
       }
@@ -2305,7 +2570,11 @@ QColor
 CQPixmap::
 getColor(int x, int y) const
 {
-  return image_.colorPixel(x, y);
+  CRGBA rgba;
+
+  image_->getRGBAPixel(x, y, rgba);
+
+  return CQUtil::rgbaToColor(rgba);
 }
 
 void
@@ -2354,8 +2623,8 @@ setXorRectFromMark()
   if (mark_.isValid())
     xor_rect_ = mark_.getValue();
   else {
-    int w = image_.width ();
-    int h = image_.height();
+    int w = image_->getWidth ();
+    int h = image_->getHeight();
 
     xor_rect_ = QRect(0, 0, w, h);
   }
@@ -2367,7 +2636,10 @@ setRectMark()
 {
   mark_.setValue(xor_rect_);
 
-  image_.setWindow(xor_rect_);
+  int x1 = xor_rect_.left (); int y1 = xor_rect_.bottom();
+  int x2 = xor_rect_.right(); int y2 = xor_rect_.top   ();
+
+  image_->setWindow(x1, y1, x2, y2);
 }
 
 void
@@ -2379,7 +2651,7 @@ copyArea(const QRect &from, const QRect &to)
   int w = from.width();
   int h = from.height();
 
-  QImage image = getImage(x, y, w, h);
+  CImagePtr image = getImage(x, y, w, h);
 
   x = to.left();
   y = to.bottom();
@@ -2396,7 +2668,7 @@ moveArea(const QRect &from, const QRect &to)
   int w = from.width();
   int h = from.height();
 
-  QImage image = getImage(x, y, w, h);
+  CImagePtr image = getImage(x, y, w, h);
 
   clear(x, y, x + w - 1, y + h - 1);
 
@@ -2503,7 +2775,7 @@ fillRectCircle()
   int r = int(sqrt(dx*dx + dy*dy) + 0.5);
 
   if (xor_mode_ == XOR_NONE) {
-    QRect rect(xc - r, yc - r, 2*r, 2*r);
+    QRect rect(xc - r, yc - r, 2*r, 2* r);
 
     addUndoImage(rect);
   }
@@ -2580,11 +2852,11 @@ drawPoint(int x, int y)
   if (xor_mode_ != XOR_NONE)
     drawXorCanvasPoint(x, y);
   else {
-    if (image_.valid(x, y)) {
-      if (image_.isColorMap())
-        image_.setPixel(x, y, getColorNum());
+    if (image_->validPixel(x, y)) {
+      if (isColorMap())
+        image_->setColorIndexPixel(x, y, getColorNum());
       else
-        image_.setPixel(x, y, getColor());
+        image_->setRGBAPixel(x, y, CQUtil::colorToRGBA(getColor()));
 
       drawCanvasPoint(x, y);
     }
@@ -2595,16 +2867,22 @@ void
 CQPixmap::
 drawCanvasPoint(int x, int y)
 {
-  if (! image_.isTransparent(x, y)) {
-    QColor c = image_.colorPixel(x, y);
+  if (! image_->isTransparent(x, y)) {
+    CRGBA rgba;
 
-    drawCanvasRect(x, y, c);
+    image_->getRGBAPixel(x, y, rgba);
+
+    drawCanvasRect(x, y, CQUtil::rgbaToColor(rgba));
   }
   else {
-    if (grid_ && grid_size_ > 4)
+#if 0
+    if (grid_ && gridSize() > 4)
       drawCanvasRect(x, y, Qt::Dense6Pattern);
     else
       drawCanvasRect(x, y, QColor(128,128,128));
+#else
+    drawCanvasRect(x, y, Qt::Dense6Pattern);
+#endif
   }
 }
 
@@ -2616,11 +2894,16 @@ drawCanvasRect(int x, int y, const QColor &c)
 
   windowToPixel(x, y, &px, &py);
 
+  QBrush brush;
+
   startPainter();
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, QColor(c));
+  brush.setColor(c);
+  brush.setStyle(Qt::SolidPattern);
 
-  if (grid_ && grid_size_ > 4) {
+  painter_->fillRect(px, py, gridSize(), gridSize(), brush);
+
+  if (grid_ && gridSize() > 4) {
     QColor color;
 
     if (qGray(c.red(), c.green(), c.blue()) > 128)
@@ -2630,7 +2913,7 @@ drawCanvasRect(int x, int y, const QColor &c)
 
     painter_->setPen(color);
 
-    painter_->drawRect(px, py, grid_size_, grid_size_);
+    painter_->drawRect(px, py, gridSize(), gridSize());
   }
 
   endPainter();
@@ -2644,25 +2927,28 @@ drawCanvasRect(int x, int y, Qt::BrushStyle brushStyle)
 
   windowToPixel(x, y, &px, &py);
 
+  QBrush brush;
+
   startPainter();
 
   QColor c(196,196,196);
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, c);
+  brush.setColor(c);
+  brush.setStyle(Qt::SolidPattern);
 
-  QBrush brush;
+  painter_->fillRect(px, py, gridSize(), gridSize(), brush);
 
   brush.setColor(QColor(0,0,0));
   brush.setStyle(brushStyle);
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, brush);
+  painter_->fillRect(px, py, gridSize(), gridSize(), brush);
 
-  if (grid_ && grid_size_ > 4) {
+  if (grid_ && gridSize() > 4) {
     QColor color(0,0,0);
 
     painter_->setPen(color);
 
-    painter_->drawRect(px, py, grid_size_, grid_size_);
+    painter_->drawRect(px, py, gridSize(), gridSize());
   }
 
   endPainter();
@@ -2672,8 +2958,8 @@ void
 CQPixmap::
 drawXorCanvasPoint(int x, int y)
 {
-  int width  = image_.width ();
-  int height = image_.height();
+  int width  = image_->getWidth ();
+  int height = image_->getHeight();
 
   if (x < 0 || x >= width || y < 0 || y >= height)
     return;
@@ -2684,14 +2970,19 @@ drawXorCanvasPoint(int x, int y)
 
   QColor c;
 
-  if (image_.isColorMap())
-    c = image_.color(getColorNum());
+  if (isColorMap())
+    c = CQUtil::rgbaToColor(image_->getColor(getColorNum()));
   else
     c = getColor();
 
-  painter_->fillRect(px, py, grid_size_, grid_size_, c);
+  QBrush brush;
 
-  if (grid_ && grid_size_ > 4) {
+  brush.setColor(c);
+  brush.setStyle(Qt::SolidPattern);
+
+  painter_->fillRect(px, py, gridSize(), gridSize(), brush);
+
+  if (grid_ && gridSize() > 4) {
     QColor color(255,255,255);
 
     if (qGray(c.red(), c.green(), c.blue()) > 128)
@@ -2699,7 +2990,7 @@ drawXorCanvasPoint(int x, int y)
 
     painter_->setPen(color);
 
-    painter_->drawRect(px, py, grid_size_, grid_size_);
+    painter_->drawRect(px, py, gridSize(), gridSize());
   }
 }
 
@@ -2743,11 +3034,11 @@ void
 CQPixmap::
 addUndoImage()
 {
-  QRect window;
+  int x1, y1, x2, y2;
 
-  image_.getWindow(window);
+  image_->getWindow(&x1, &y1, &x2, &y2);
 
-  addUndoImage(window);
+  addUndoImage(QRect(x1, y1, x2 - x1 + 1, y2 - x1 + 1));
 }
 
 void
@@ -2766,11 +3057,11 @@ addUndoImage(const QRect &rect)
   else {
     x = 0;
     y = 0;
-    w = image_.width();
-    h = image_.height();
+    w = image_->getWidth();
+    h = image_->getHeight();
   }
 
-  QImage image = getImage(x, y, w, h);
+  CImagePtr image = getImage(x, y, w, h);
 
   undo_->addUndo(new CQPixmapUndoImage(this, x, y, image));
 
@@ -2792,18 +3083,18 @@ bool
 CQPixmap::
 pixelToWindow(int px, int py, int *wx, int *wy)
 {
-  *wx = px/grid_size_;
-  *wy = py/grid_size_;
+  *wx = px/gridSize();
+  *wy = py/gridSize();
 
-  return (*wx >= 0 && *wx < image_.width() && *wy >= 0 && *wy < image_.height());
+  return (*wx >= 0 && *wx < int(image_->getWidth()) && *wy >= 0 && *wy < int(image_->getHeight()));
 }
 
 bool
 CQPixmap::
 windowToPixel(int wx, int wy, int *px, int *py)
 {
-  *px = wx*grid_size_;
-  *py = wy*grid_size_;
+  *px = wx*gridSize();
+  *py = wy*gridSize();
 
   return (*px >= 0 && *px < width() && *py >= 0 && *py < height());
 }
@@ -2814,11 +3105,196 @@ bool
 CQPixmapUndoImage::
 exec()
 {
-  QImage image = pixmap_->getImage(x_, y_, image_.width(), image_.height());
+  CImagePtr image = pixmap_->getImage(x_, y_, image_->getWidth(), image_->getHeight());
 
   pixmap_->drawImage(x_, y_, image_);
 
   image_ = image;
 
   return true;
+}
+
+
+//-------------------
+
+CQPixmapFilenameLabel::
+CQPixmapFilenameLabel(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("filename");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(0); layout->setSpacing(2);
+
+  label_    = new CQPixmapStatusLabel("Filename:");
+  fileName_ = new QLabel;
+
+  layout->addWidget(label_   );
+  layout->addWidget(fileName_);
+}
+
+void
+CQPixmapFilenameLabel::
+update()
+{
+  fileName_->setText(QString("%1").arg(pixmap_->filename().c_str()));
+}
+
+//-------------------
+
+CQPixmapSizeLabel::
+CQPixmapSizeLabel(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("size");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(0); layout->setSpacing(2);
+
+  label_ = new CQPixmapStatusLabel("Size:");
+  size_  = new QLabel;
+
+  layout->addWidget(label_);
+  layout->addWidget(size_ );
+}
+
+void
+CQPixmapSizeLabel::
+update()
+{
+  size_->setText(QString("%1x%2").arg(pixmap_->getImage()->getWidth()).
+                                  arg(pixmap_->getImage()->getHeight()));
+}
+
+//-------------------
+
+CQPixmapPosLabel::
+CQPixmapPosLabel(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("pos");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(0); layout->setSpacing(2);
+
+  label_ = new CQPixmapStatusLabel("Pos:");
+  pos_   = new QLabel;
+
+  pos_->setText("0, 0");
+
+  QFontMetrics fm(font());
+
+  pos_->setFixedWidth(fm.width("888, 888"));
+
+  layout->addWidget(label_);
+  layout->addWidget(pos_ );
+}
+
+void
+CQPixmapPosLabel::
+update(int x, int y)
+{
+  pos_->setText(QString("%1, %2").arg(x).arg(y));
+}
+
+//-------------------
+
+CQPixmapGridSize::
+CQPixmapGridSize(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("grid_size");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(0); layout->setSpacing(2);
+
+  label_ = new CQPixmapStatusLabel("Grid Size:");
+  spin_  = new QSpinBox;
+
+  layout->addWidget(label_);
+  layout->addWidget(spin_ );
+
+  spin_->setRange(1, 256);
+  spin_->setValue(pixmap->gridSize());
+
+  connect(spin_, SIGNAL(valueChanged(int)), pixmap, SLOT(setGridSize(int)));
+}
+
+void
+CQPixmapGridSize::
+update()
+{
+  spin_->setValue(pixmap_->gridSize());
+}
+
+//-------------------
+
+CQPixmapFgControl::
+CQPixmapFgControl(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("fg_control");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(2); layout->setSpacing(2);
+
+  QLabel *label = new CQPixmapStatusLabel("Fg:");
+
+  button_ = new CQPixmapFgButton(pixmap_);
+
+  layout->addWidget(label);
+  layout->addWidget(button_);
+}
+
+void
+CQPixmapFgControl::
+update()
+{
+  button_->update();
+}
+
+//-------------------
+
+CQPixmapBgControl::
+CQPixmapBgControl(CQPixmap *pixmap) :
+ pixmap_(pixmap)
+{
+  setObjectName("bg_control");
+
+  QHBoxLayout *layout = new QHBoxLayout(this);
+  layout->setMargin(2); layout->setSpacing(2);
+
+  QLabel *label = new CQPixmapStatusLabel("Bg:");
+
+  button_ = new CQPixmapBgButton(pixmap_);
+
+  layout->addWidget(label);
+  layout->addWidget(button_);
+}
+
+void
+CQPixmapBgControl::
+update()
+{
+  button_->update();
+}
+
+//-------------------
+
+CQPixmapStatusLabel::
+CQPixmapStatusLabel(const QString &str) :
+ QLabel(str)
+{
+  QFont sfont = font();
+
+  QFontMetrics fm(sfont);
+
+  setFixedHeight(fm.height() + 2);
+
+  sfont.setPointSizeF(sfont.pointSizeF()*0.8);
+  sfont.setBold(true);
+
+  setFont(sfont);
+
+  setAlignment(Qt::AlignLeft | Qt::AlignBottom);
 }

@@ -9,7 +9,7 @@ class CQPixmapCanvas : public QWidget {
  public:
   CQPixmapCanvas(CQPixmap *pixmap);
 
-  QColor getColor(const QPoint &p) const;
+  void getColor(const QPoint &p, QColor &c, int &ind) const;
 
  private:
   void paintEvent(QPaintEvent *);

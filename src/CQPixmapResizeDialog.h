@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class QLineEdit;
+class CQIntegerEdit;
 
 class CQPixmapResizeDialog : public QDialog {
   Q_OBJECT
@@ -20,8 +20,8 @@ class CQPixmapResizeDialog : public QDialog {
   void resize(int width, int height);
 
  private:
-  QLineEdit *width_edit_;
-  QLineEdit *height_edit_;
+  CQIntegerEdit *width_edit_;
+  CQIntegerEdit *height_edit_;
 };
 
 #endif

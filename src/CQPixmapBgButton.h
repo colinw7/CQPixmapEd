@@ -12,7 +12,7 @@ class CQPixmapBgButton : public QPushButton {
   CQPixmapBgButton(CQPixmap *pixmap);
  ~CQPixmapBgButton();
 
-  QColor getColor() const;
+  void getColor(QColor &c, int &ind) const;
 
  private:
   void paintEvent(QPaintEvent *);

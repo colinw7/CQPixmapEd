@@ -1,12 +1,12 @@
 #include <CQPixmapEd.h>
 
-#include <QApplication>
+#include <CQApp.h>
 #include <iostream>
 
 int
 main(int argc, char **argv)
 {
-  QApplication app(argc, argv);
+  CQApp app(argc, argv);
 
   CQPixmap *pixmap = new CQPixmap;
 

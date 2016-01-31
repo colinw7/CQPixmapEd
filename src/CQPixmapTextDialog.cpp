@@ -1,10 +1,7 @@
 #include <CQPixmapTextDialog.h>
-
+#include <CQLayout.h>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 CQPixmapTextDialog::
 CQPixmapTextDialog(QWidget *parent) :

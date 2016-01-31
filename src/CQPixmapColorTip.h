@@ -21,13 +21,16 @@ class CQPixmapColorTip : public QWidget {
     layout->addWidget(label_ );
   }
 
-  void setColor(const QColor &c) {
+  void setColor(const QColor &c, int i) {
     QString astr; astr.sprintf("%02X", c.alpha());
     QString rstr; rstr.sprintf("%02X", c.red  ());
     QString gstr; gstr.sprintf("%02X", c.green());
     QString bstr; bstr.sprintf("%02X", c.blue ());
 
-    label_->setText(QString("%1%2%3%4").arg(astr).arg(rstr).arg(gstr).arg(bstr));
+    if (i >= 0)
+      label_->setText(QString("%1 (#%2%3%4%5)").arg(i).arg(astr).arg(rstr).arg(gstr).arg(bstr));
+    else
+      label_->setText(QString("#%1%2%3%4").arg(astr).arg(rstr).arg(gstr).arg(bstr));
 
     swatch_->setColor(c);
   }

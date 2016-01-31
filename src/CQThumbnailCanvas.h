@@ -7,6 +7,12 @@ class CQPixmap;
 
 class CQThumbnailCanvas : public QWidget {
  public:
+  enum BgMode {
+    BGCOLOR,
+    CHECKERBOARD
+  };
+
+ public:
   CQThumbnailCanvas(CQPixmap *pixmap);
 
  private:
@@ -14,6 +20,7 @@ class CQThumbnailCanvas : public QWidget {
 
  private:
   CQPixmap *pixmap_;
+  BgMode    bgMode_;
 };
 
 #endif

@@ -1,12 +1,14 @@
-TEMPLATE = app
+TEMPLATE = lib
 
 TARGET = CQPixmapEd
 
-DEPENDPATH += .
-
 QT += widgets
 
-#CONFIG += debug
+DEPENDPATH += .
+
+CONFIG += staticlib
+
+QMAKE_CXXFLAGS += -std=c++11
 
 # Input
 SOURCES += \
@@ -15,51 +17,55 @@ CQPixmapBgButton.cpp \
 CQPixmapCanvas.cpp \
 CQPixmapColorButton.cpp \
 CQPixmapEd.cpp \
-CQPixmapEdMain.cpp \
 CQPixmapFgButton.cpp \
 CQPixmapImage.cpp \
 CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
 CQThumbnailCanvas.cpp \
-CColorWheel.cpp \
 CQColorChooser.cpp \
 CQColorWheel.cpp \
+CQColorWheelCanvas.cpp \
 CQToolTip.cpp \
+CQImageButton.cpp \
+CQIntegerEdit.cpp \
+CColorWheel.cpp \
 
 HEADERS += \
+../include/CQPixmapEd.h \
+../include/CQPixmapImage.h \
 CQPixmapAddColorDialog.h \
 CQPixmapBgButton.h \
 CQPixmapCanvas.h \
 CQPixmapColorButton.h \
 CQPixmapColorTip.h \
-CQPixmapEd.h \
 CQPixmapFgButton.h \
-CQPixmapImage.h \
 CQPixmapRescaleDialog.h \
 CQPixmapResizeDialog.h \
 CQPixmapTextDialog.h \
 CQPixmapTipSwatch.h \
 CQThumbnailCanvas.h \
-CColorWheel.h \
 CQColorChooser.h \
 CQColorWheel.h \
+CQColorWheelCanvas.h \
 CQToolTip.h \
+CQImageButton.h \
+CQIntegerEdit.h \
+CColorWheel.h \
 
-DESTDIR     = ../bin
 OBJECTS_DIR = ../obj
-LIB_DIR     = ../lib
+
+DESTDIR = ../lib
 
 INCLUDEPATH += \
 ../include \
+../../CQColorSelector/include \
+../../CQUtil/include \
+../../CImageLib/include \
+../../CFile/include \
+../../CStrUtil/include \
 ../../CMath/include \
+../../CFont/include \
 ../../COS/include \
 ../../CUndo/include \
 ../../CUtil/include \
-../../CQUtil/include \
-
-unix:LIBS += \
--L$$LIB_DIR \
--L../../CUndo/lib \
--L../../CQUtil/lib \
--lCQUtil -lCUndo

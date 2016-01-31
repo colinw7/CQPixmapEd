@@ -2,6 +2,7 @@
 #include <CQPixmapEd.h>
 #include <CQPixmapColorTip.h>
 #include <CQToolTip.h>
+#include <CQUtil.h>
 
 #include <QPainter>
 #include <QMouseEvent>
@@ -16,7 +17,7 @@ class CQPixmapColorButtonTip : public CQToolTipIFace {
     delete tip_;
   }
 
-  QWidget *showWidget() {
+  QWidget *showWidget(const QPoint &) {
     if (! tip_)
       tip_ = new CQPixmapColorTip;
 
@@ -33,12 +34,17 @@ class CQPixmapColorButtonTip : public CQToolTipIFace {
 
   //bool trackMouse() const { return true; }
 
-  void updateWidget() {
-    if (! tip_) return;
+  bool updateWidget() {
+    if (! tip_) return false;
 
-    QColor c = button_->getColor();
+    QColor c;
+    int    ind;
 
-    tip_->setColor(c);
+    button_->getColor(c, ind);
+
+    tip_->setColor(c, ind);
+
+    return true;
   }
 
  private:
@@ -67,11 +73,13 @@ CQPixmapColorButton::
   CQToolTip::unsetToolTip(this);
 }
 
-QColor
+void
 CQPixmapColorButton::
-getColor() const
+getColor(QColor &c, int &ind) const
 {
-  return pixmap_->getImage().color(color_num_);
+  ind = color_num_;
+
+  c = CQUtil::rgbaToColor(pixmap_->getImage()->getColor(ind));
 }
 
 void
@@ -88,7 +96,7 @@ paintEvent(QPaintEvent *)
     style = Qt::Dense6Pattern;
   }
   else {
-    color = getColor();
+    color = CQUtil::rgbaToColor(pixmap_->getImage()->getColor(color_num_));
     style = Qt::SolidPattern;
   }
 

@@ -2,6 +2,7 @@
 #include <CQPixmapEd.h>
 #include <CQPixmapColorTip.h>
 #include <CQToolTip.h>
+#include <CQUtil.h>
 
 #include <QPainter>
 
@@ -15,7 +16,7 @@ class CQPixmapBgButtonTip : public CQToolTipIFace {
     delete tip_;
   }
 
-  QWidget *showWidget() {
+  QWidget *showWidget(const QPoint &) {
     if (! tip_)
       tip_ = new CQPixmapColorTip;
 
@@ -32,18 +33,25 @@ class CQPixmapBgButtonTip : public CQToolTipIFace {
 
   //bool trackMouse() const { return true; }
 
-  void updateWidget() {
-    if (! tip_) return;
+  bool updateWidget() {
+    if (! tip_) return false;
 
-    QColor c = button_->getColor();
+    QColor c;
+    int    ind;
 
-    tip_->setColor(c);
+    button_->getColor(c, ind);
+
+    tip_->setColor(c, ind);
+
+    return true;
   }
 
  private:
   CQPixmapBgButton *button_;
   CQPixmapColorTip *tip_;
 };
+
+//------
 
 CQPixmapBgButton::
 CQPixmapBgButton(CQPixmap *pixmap) :
@@ -62,17 +70,19 @@ CQPixmapBgButton::
   CQToolTip::unsetToolTip(this);
 }
 
-QColor
+void
 CQPixmapBgButton::
-getColor() const
+getColor(QColor &c, int &ind) const
 {
-  if (pixmap_->isColorMap()) {
-    int color_num = pixmap_->getBgColorNum();
+  ind = -1;
 
-    return pixmap_->getImage().color(color_num);
+  if (pixmap_->getImage()->hasColormap()) {
+    ind = pixmap_->getBgColorNum();
+
+    c = CQUtil::rgbaToColor(pixmap_->getImage()->getColor(ind));
   }
   else
-    return pixmap_->getBgColor();
+    c = pixmap_->getBgColor();
 }
 
 void
@@ -81,8 +91,7 @@ paintEvent(QPaintEvent *)
 {
   QPainter painter(this);
 
-  QColor color = getColor();
-
+  QColor         color;
   Qt::BrushStyle style;
 
   if (pixmap_->isColorMap()) {
@@ -95,11 +104,15 @@ paintEvent(QPaintEvent *)
       color = QColor(0,0,0);
       style = Qt::Dense6Pattern;
     }
-    else
+    else {
+      color = CQUtil::rgbaToColor(pixmap_->getImage()->getColor(color_num));
       style = Qt::SolidPattern;
+    }
   }
-  else
+  else {
+    color = pixmap_->getBgColor();
     style = Qt::SolidPattern;
+  }
 
   QBrush brush;
 
@@ -109,7 +122,9 @@ paintEvent(QPaintEvent *)
   painter.fillRect(0, 0, size_, size_, brush);
 
   if (pixmap_->isBgActive()) {
-    QColor color1 = CQPixmapImage::toBW(CQPixmapImage::inverse(color));
+    CRGBA rgba = CQUtil::colorToRGBA(color);
+
+    QColor color1 = CQUtil::rgbaToColor(rgba.inverse().toBW());
 
     painter.setPen(color1);
 

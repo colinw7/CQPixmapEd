@@ -3,6 +3,10 @@
 
 #include <QWidget>
 
+#include <CRGBA.h>
+#include <CHSV.h>
+#include <CIPoint2D.h>
+
 class CQColorWheelCanvas;
 class CQColorWheelArea;
 class QSlider;
@@ -16,19 +20,19 @@ class CQColorWheel : public QWidget {
                int size=64, bool show_swatches=true);
  ~CQColorWheel();
 
-  const QColor &getBgRGB() const;
-  const QColor &getFgRGB() const;
+  const CRGBA &getBgRGB() const;
+  const CRGBA &getFgRGB() const;
 
-  const QColor &getRGB() const;
+  const CRGBA &getRGB() const;
 
-  void setBgRGB(const QColor &rgb);
-  void setFgRGB(const QColor &rgb);
+  void setBgRGB(const CRGBA &rgb);
+  void setFgRGB(const CRGBA &rgb);
 
-  void setRGB(const QColor &rgb);
+  void setRGB(const CRGBA &rgb);
 
-  void setHSV(const QColor &hsv);
+  void setHSV(const CHSV &hsv);
 
-  const QColor &getHSV() const;
+  const CHSV &getHSV() const;
 
  private:
   void updateRGB();

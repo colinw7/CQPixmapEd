@@ -1,16 +1,15 @@
 #include <CQPixmapRescaleDialog.h>
-
-#include <QLineEdit>
+#include <CQLayout.h>
+#include <CQIntegerEdit.h>
 #include <QCheckBox>
 #include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 CQPixmapRescaleDialog::
 CQPixmapRescaleDialog(QWidget *parent) :
  QDialog(parent)
 {
+  setWindowTitle("Rescale");
+
   QVBoxLayout *layout = new QVBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 
@@ -19,7 +18,7 @@ CQPixmapRescaleDialog(QWidget *parent) :
 
   QLabel *width_label = new QLabel("Width");
 
-  width_edit_ = new QLineEdit;
+  width_edit_ = new CQIntegerEdit;
 
   width_layout->addWidget(width_label);
   width_layout->addWidget(width_edit_);
@@ -31,7 +30,7 @@ CQPixmapRescaleDialog(QWidget *parent) :
 
   QLabel *height_label = new QLabel("Height");
 
-  height_edit_ = new QLineEdit;
+  height_edit_ = new CQIntegerEdit;
 
   height_layout->addWidget(height_label);
   height_layout->addWidget(height_edit_);
@@ -39,8 +38,6 @@ CQPixmapRescaleDialog(QWidget *parent) :
   layout->addLayout(height_layout);
 
   aspect_ = new QCheckBox("Keep Aspect");
-
-  layout->addWidget(aspect_);
 
   QHBoxLayout *button_layout = new QHBoxLayout;
   button_layout->setMargin(2); button_layout->setSpacing(2);
@@ -61,8 +58,8 @@ void
 CQPixmapRescaleDialog::
 init(int width, int height, bool keep_aspect)
 {
-  width_edit_ ->setText(QString("%1").arg(width ));
-  height_edit_->setText(QString("%1").arg(height));
+  width_edit_ ->setValue(width);
+  height_edit_->setValue(height);
 
   aspect_->setChecked(keep_aspect);
 }
@@ -71,10 +68,7 @@ void
 CQPixmapRescaleDialog::
 accept()
 {
-  int w = width_edit_ ->text().toInt();
-  int h = height_edit_->text().toInt();
-
-  emit rescale(w, h, aspect_->isChecked());
+  emit rescale(width_edit_->getValue(), height_edit_->getValue(), aspect_->isChecked());
 
   close();
 }

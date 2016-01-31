@@ -3,7 +3,7 @@
 
 #include <accessor.h>
 
-#include <CQPixmapImage.h>
+#include <CImageLib.h>
 #include <CUndo.h>
 #include <COptVal.h>
 
@@ -12,13 +12,18 @@
 
 class QAction;
 class QToolBar;
+#if 0
 class CQColorWheel;
+#else
+class CQColorSelector;
+#endif
 
 class QGridLayout;
 class QRadioButton;
 class QStackedWidget;
 class QPainter;
 class QLabel;
+class QSpinBox;
 
 class CQPixmap;
 class CQPixmapCanvas;
@@ -26,10 +31,16 @@ class CQThumbnailCanvas;
 class CQPixmapFgButton;
 class CQPixmapBgButton;
 class CQPixmapColorButton;
+class CQPixmapFilenameLabel;
+class CQPixmapSizeLabel;
+class CQPixmapGridSize;
+class CQPixmapPosLabel;
+class CQPixmapFgControl;
+class CQPixmapBgControl;
 
 class CQPixmapUndoImage : public CUndoData {
  public:
-  CQPixmapUndoImage(CQPixmap *pixmap, int x, int y, QImage image) :
+  CQPixmapUndoImage(CQPixmap *pixmap, int x, int y, CImagePtr image) :
    pixmap_(pixmap), x_(x), y_(y), image_(image) {
   }
 
@@ -41,13 +52,21 @@ class CQPixmapUndoImage : public CUndoData {
  private:
   CQPixmap *pixmap_;
   int       x_, y_;
-  QImage    image_;
+  CImagePtr image_;
 };
 
 class CQPixmap : public QMainWindow {
   Q_OBJECT
 
+  Q_PROPERTY(int numColorColumns READ numColorColumns WRITE setNumColorColumns)
+
  public:
+  enum ColorMode {
+    COLOR_NONE = 0,
+    COLOR_MAP  = 1,
+    COLOR_RGB  = 2
+  };
+
   enum Function {
     FUNCTION_COPY,
     FUNCTION_MOVE,
@@ -60,6 +79,7 @@ class CQPixmap : public QMainWindow {
     FUNCTION_CIRCLE,
     FUNCTION_FILLED_CIRCLE,
     FUNCTION_FLOOD_FILL,
+    FUNCTION_LARGEST_RECT,
     FUNCTION_TEXT,
     FUNCTION_SET_HOT_SPOT
   };
@@ -76,17 +96,23 @@ class CQPixmap : public QMainWindow {
  public:
   CQPixmap();
 
-  bool isColorMap() const { return getImage().isColorMap(); }
+  int numColorColumns() const { return numColorColumns_; }
+  void setNumColorColumns(int i);
+
+  bool isColorMap() const { return color_mode_ == COLOR_MAP; }
+  bool isColorRGB() const { return color_mode_ == COLOR_RGB; }
 
   Function getFunction() const { return function_; }
 
   XorMode getXorMode() const { return xor_mode_; }
 
-  const CQPixmapImage &getImage() const { return image_; }
+  const std::string &filename() const { return filename_; }
+
+  CImagePtr getImage() const { return image_; }
 
   bool getGrid() const { return grid_; }
 
-  int getGridSize() const { return grid_size_; }
+  int gridSize() const { return gridSize_; }
 
   int getBgColorNum() const { return bg_color_num_; }
   int getFgColorNum() const { return fg_color_num_; }
@@ -121,6 +147,8 @@ class CQPixmap : public QMainWindow {
 
   CUndo *getUndo() const { return undo_; }
 
+  void init();
+
   void createMenus();
   void createToolBars();
 
@@ -135,7 +163,7 @@ class CQPixmap : public QMainWindow {
   void newImage();
 
   void loadImage(const std::string &fileName);
-  void loadImage(QImage image);
+  void loadImage(CImagePtr image);
 
   void insertImage(const std::string &fileName);
 
@@ -148,19 +176,20 @@ class CQPixmap : public QMainWindow {
 
   QColor getColor(int x, int y) const;
 
-  QImage getImage(int x, int y, int width, int height);
+  CImagePtr getImage(int x, int y, int width, int height);
 
-  void drawImage(int x, int y, QImage image);
+  void drawImage(int x, int y, CImagePtr image);
 
   void rotate(int angle);
   void floodFill(int x, int y);
+  void largestRect(int x, int y);
   void clear(int left, int bottom, int right, int top);
 
   void drawText(int x, int y);
 
   void setHotSpot(int x, int y);
 
-  void setColorMode(QImage::Format format, bool force=false);
+  void setColorMode(ColorMode mode);
 
   void redraw();
 
@@ -227,6 +256,7 @@ class CQPixmap : public QMainWindow {
   void zoomIn();
   void zoomOut();
   void zoomFull();
+  void setGridSize(int);
   void setTextDlg();
   void setDrawText(const QString &);
   void setFontDlg();
@@ -234,7 +264,9 @@ class CQPixmap : public QMainWindow {
   void setColorMap(bool);
   void setColorRGB(bool);
   void addColorDialog();
+
   void addColor(const QString &);
+  void addColor(const QColor &);
 
   void undo();
   void redo();
@@ -266,13 +298,18 @@ class CQPixmap : public QMainWindow {
   void setCircleMode();
   void setFilledCircleMode();
   void setFloodFillMode();
+  void setLargestRectMode();
   void setTextMode();
   void setHotSpotMode();
 
   void clearHotSpot();
 
+#if 0
   void wheelBgColorChanged();
   void wheelFgColorChanged();
+#else
+  void wheelColorChanged(const QColor &c);
+#endif
 
   void statusMessageChanged(const QString &msg);
 
@@ -313,6 +350,7 @@ class CQPixmap : public QMainWindow {
   QAction *circleItem_;
   QAction *fillCircleItem_;
   QAction *floodFillItem_;
+  QAction *largestRectItem_;
   QAction *textItem_;
   QAction *hotSpotItem_;
 
@@ -360,17 +398,20 @@ class CQPixmap : public QMainWindow {
   QRadioButton *circleFunction_;
   QRadioButton *filledCircleFunction_;
   QRadioButton *floodFillFunction_;
+  QRadioButton *largestRectFunction_;
   QRadioButton *textFunction_;
   QRadioButton *setHotSpotFunction_;
 
   QWidget *controlArea_;
 
-  QLabel *positionLabel_;
+  CQPixmapPosLabel *positionLabel_   { 0 };
+  CQPixmapGridSize *gridSizeControl_ { 0 };
 
+  ColorMode            color_mode_;
   Function             function_;
   XorMode              xor_mode_;
   std::string          filename_;
-  CQPixmapImage        image_;
+  CImagePtr            image_;
   QPixmap             *pixmap_;
   QPainter            *pixmap_painter_;
   QPixmap              xor_pixmap_;
@@ -380,7 +421,7 @@ class CQPixmap : public QMainWindow {
   QFont                drawFont_;
   QString              drawText_;
   bool                 grid_;
-  int                  grid_size_;
+  int                  gridSize_;
   int                  bg_color_num_;
   int                  fg_color_num_;
   int                  transparent_color_num_;
@@ -391,16 +432,24 @@ class CQPixmap : public QMainWindow {
   bool                 fg_active_;
   CQPixmapCanvas      *canvas_;
   CQThumbnailCanvas   *thumbnail_canvas_;
+#if 0
   CQColorWheel        *color_wheel_;
-  QStackedWidget      *color_stack_;
-  QGridLayout         *colormap_widget_layout_;
-  CQPixmapFgButton    *fg_button_;
-  CQPixmapBgButton    *bg_button_;
-  ColorButtonList      color_buttons_;
-  QRect                xor_rect_;
-  COptValT<QRect>      mark_;
-  int                  x_hot_, y_hot_;
-  CUndo               *undo_;
+#else
+  CQColorSelector     *color_selector_;
+#endif
+  QStackedWidget        *color_stack_;
+  QGridLayout           *colormap_widget_layout_;
+  CQPixmapFilenameLabel *filenameLabel_ { 0 };
+  CQPixmapSizeLabel     *sizeLabel_ { 0 };
+  CQPixmapFgControl     *fgControl_ { 0 };
+  CQPixmapBgControl     *bgControl_ { 0 };
+  ColorButtonList        color_buttons_;
+  int                    numColorColumns_;
+  QWidget               *color_spacer_;
+  QRect                  xor_rect_;
+  COptValT<QRect>        mark_;
+  int                    x_hot_, y_hot_;
+  CUndo                 *undo_;
 };
 
 #endif

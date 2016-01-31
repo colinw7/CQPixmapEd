@@ -1,7 +1,7 @@
 #include <CQColorWheel.h>
+#include <CQColorWheelCanvas.h>
 #include <CColorWheel.h>
-#include <CQPixmapColorTip.h>
-#include <CQToolTip.h>
+#include <CQUtil.h>
 
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -13,37 +13,12 @@
 #include <QPainter>
 #include <QMouseEvent>
 
-class CQColorWheelCanvas : public QWidget, public CColorWheel {
- public:
-  CQColorWheelCanvas(CQColorWheel *wheel, int radius=0, Qt::Orientation orient=Qt::Vertical,
-                     bool show_swatches=true);
-
- ~CQColorWheelCanvas();
-
-  QColor getColor(int x, int y);
-
-  void paintEvent(QPaintEvent *e);
-
-  void mousePressEvent  (QMouseEvent *event);
-  void mouseMoveEvent   (QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-
-  void setForeground(const QColor &rgba);
-
-  void drawPoint(int x, int y);
-  void drawLine(int x1, int y1, int x2, int y2);
-  void fillRectangle(const QRect &rect);
-
- private:
-  CQColorWheel *wheel_;
-  QPainter     *painter_;
-  QColor        fg_;
-};
-
 CQColorWheel::
 CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatches) :
  QWidget(parent)
 {
+  setObjectName("wheel");
+
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   QBoxLayout *layout;
@@ -56,6 +31,7 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
   layout->setMargin(0); layout->setSpacing(0);
 
   QFrame *wheelCanvas = new QFrame;
+  wheelCanvas->setObjectName("frame");
 
   int margin = 4;
 
@@ -82,6 +58,7 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
   layout->addWidget(wheelCanvas);
 
   QGroupBox *optionsGroup = new QGroupBox;
+  optionsGroup->setObjectName("group");
 
   optionsGroup->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -92,14 +69,15 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
   optionsGroupLayout->setMargin(0); optionsGroupLayout->setSpacing(0);
 
   QTabWidget *tabWidget = new QTabWidget;
+  tabWidget->setObjectName("tab");
 
   optionsGroup->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
   optionsGroupLayout->addWidget(tabWidget);
 
-  QWidget *rgbTab = new QWidget;
-  QWidget *hsvTab = new QWidget;
-  QWidget *optTab = new QWidget;
+  QWidget *rgbTab = new QWidget; rgbTab->setObjectName("rgb");
+  QWidget *hsvTab = new QWidget; hsvTab->setObjectName("hsv");
+  QWidget *optTab = new QWidget; optTab->setObjectName("opt");
 
   rgbTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   hsvTab->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -113,13 +91,17 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
 
   rgbLayout->setMargin(2); rgbLayout->setSpacing(2);
 
-  QLabel *redLabel   = new QLabel("R");
-  QLabel *greenLabel = new QLabel("G");
-  QLabel *blueLabel  = new QLabel("B");
+  QLabel *redLabel   = new QLabel("R"); redLabel  ->setObjectName("label");
+  QLabel *greenLabel = new QLabel("G"); greenLabel->setObjectName("label");
+  QLabel *blueLabel  = new QLabel("B"); blueLabel ->setObjectName("label");
 
   redSlider   = new QSlider(Qt::Horizontal); redValue   = new QSpinBox();
   greenSlider = new QSlider(Qt::Horizontal); greenValue = new QSpinBox();
   blueSlider  = new QSlider(Qt::Horizontal); blueValue  = new QSpinBox();
+
+  redSlider  ->setObjectName("slider"); redValue  ->setObjectName("spin");
+  greenSlider->setObjectName("slider"); greenValue->setObjectName("spin");
+  blueSlider ->setObjectName("slider"); blueValue ->setObjectName("spin");
 
   redSlider  ->setRange(0, 255); redValue  ->setRange(0, 255);
   greenSlider->setRange(0, 255); greenValue->setRange(0, 255);
@@ -153,6 +135,10 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
   satSlider  ->setRange(0, 255); satValue  ->setRange(0, 255);
   valueSlider->setRange(0, 255); valueValue->setRange(0, 255);
 
+  hueSlider  ->setObjectName("slider"); hueValue  ->setObjectName("spin");
+  satSlider  ->setObjectName("slider"); satValue  ->setObjectName("spin");
+  valueSlider->setObjectName("slider"); valueValue->setObjectName("spin");
+
   hsvLayout->addWidget(hueLabel   , 0, 0);
   hsvLayout->addWidget(hueSlider  , 0, 1);
   hsvLayout->addWidget(hueValue   , 0, 2);
@@ -181,12 +167,15 @@ CQColorWheel(QWidget *parent, Qt::Orientation orient, int size, bool show_swatch
 
   //----------
 
-  canvas_ = new CQColorWheelCanvas(this, 0, orient, show_swatches);
+  COrientation orientation =
+    (orient == Qt::Vertical ? CORIENTATION_VERTICAL : CORIENTATION_HORIZONTAL);
+
+  canvas_ = new CQColorWheelCanvas(this, 0, orientation, show_swatches);
 
   wheelCanvasLayout->addWidget(canvas_);
 
-  setFgRGB(QColor(0  ,0  ,0  ));
-  setBgRGB(QColor(255,255,255));
+  setFgRGB(CRGBA(0,0,0));
+  setBgRGB(CRGBA(1,1,1));
 
   // RGB
   connect(redSlider  , SIGNAL(valueChanged(int)), this, SLOT(updateRGBFromSlider()));
@@ -218,7 +207,7 @@ void
 CQColorWheel::
 updateRGBFromSlider()
 {
-  QColor rgb(redSlider->value(), greenSlider->value(), blueSlider->value());
+  CRGBA rgb(redSlider->value()/255.0, greenSlider->value()/255.0, blueSlider->value()/255.0);
 
   setRGB(rgb);
 }
@@ -227,7 +216,7 @@ void
 CQColorWheel::
 updateRGBFromSpin()
 {
-  QColor rgb(redValue->value(), greenValue->value(), blueValue->value());
+  CRGBA rgb(redValue->value()/255.0, greenValue->value()/255.0, blueValue->value()/255.0);
 
   setRGB(rgb);
 }
@@ -236,9 +225,7 @@ void
 CQColorWheel::
 updateHSVFromSlider()
 {
-  QColor hsv;
-
-  hsv.setHsv(hueSlider->value(), satSlider->value(), valueSlider->value());
+  CHSV hsv(hueSlider->value(), satSlider->value()/255.0, valueSlider->value()/255.0);
 
   setHSV(hsv);
 }
@@ -247,9 +234,7 @@ void
 CQColorWheel::
 updateHSVFromSpin()
 {
-  QColor hsv;
-
-  hsv.setHsv(hueValue->value(), satValue->value(), valueValue->value());
+  CHSV hsv(hueValue->value(), satValue->value()/255.0, valueValue->value()/255.0);
 
   setHSV(hsv);
 }
@@ -276,7 +261,7 @@ updateBase(const QString &str)
 
 void
 CQColorWheel::
-setBgRGB(const QColor &rgb)
+setBgRGB(const CRGBA &rgb)
 {
   canvas_->setBgRGB(rgb);
 
@@ -285,7 +270,7 @@ setBgRGB(const QColor &rgb)
 
 void
 CQColorWheel::
-setFgRGB(const QColor &rgb)
+setFgRGB(const CRGBA &rgb)
 {
   canvas_->setFgRGB(rgb);
 
@@ -294,7 +279,7 @@ setFgRGB(const QColor &rgb)
 
 void
 CQColorWheel::
-setRGB(const QColor &rgb)
+setRGB(const CRGBA &rgb)
 {
   canvas_->setRGB(rgb);
 
@@ -309,19 +294,19 @@ updateRGB()
 
   if (active) return;
 
-  QColor rgb = getRGB();
+  CRGBA rgb = getRGB();
 
   active = true;
 
-  redSlider  ->setValue(rgb.red  ());
-  greenSlider->setValue(rgb.green());
-  blueSlider ->setValue(rgb.blue ());
+  redSlider  ->setValue(int(rgb.getRed  ()*255));
+  greenSlider->setValue(int(rgb.getGreen()*255));
+  blueSlider ->setValue(int(rgb.getBlue ()*255));
 
-  redValue  ->setValue(rgb.red  ());
-  greenValue->setValue(rgb.green());
-  blueValue ->setValue(rgb.blue ());
+  redValue  ->setValue(int(rgb.getRed  ()*255));
+  greenValue->setValue(int(rgb.getGreen()*255));
+  blueValue ->setValue(int(rgb.getBlue ()*255));
 
-  QColor hsv = canvas_->getHSV();
+  CHSV hsv = canvas_->getHSV();
 
   setHSV(hsv);
 
@@ -335,21 +320,21 @@ updateRGB()
     emit colorFgChanged();
 }
 
-const QColor &
+const CRGBA &
 CQColorWheel::
 getBgRGB() const
 {
   return canvas_->getBgRGB();
 }
 
-const QColor &
+const CRGBA &
 CQColorWheel::
 getFgRGB() const
 {
   return canvas_->getFgRGB();
 }
 
-const QColor &
+const CRGBA &
 CQColorWheel::
 getRGB() const
 {
@@ -358,7 +343,7 @@ getRGB() const
 
 void
 CQColorWheel::
-setHSV(const QColor &hsv)
+setHSV(const CHSV &hsv)
 {
   static bool active;
 
@@ -366,17 +351,17 @@ setHSV(const QColor &hsv)
 
   active = true;
 
-  hueSlider  ->setValue(int(hsv.hue       ()));
-  satSlider  ->setValue(int(hsv.saturation()));
-  valueSlider->setValue(int(hsv.value     ()));
+  hueSlider  ->setValue(int(hsv.getHue       ()));
+  satSlider  ->setValue(int(hsv.getSaturation()*255));
+  valueSlider->setValue(int(hsv.getValue     ()*255));
 
-  hueValue  ->setValue(int(hsv.hue       ()));
-  satValue  ->setValue(int(hsv.saturation()));
-  valueValue->setValue(int(hsv.value     ()));
+  hueValue  ->setValue(int(hsv.getHue       ()));
+  satValue  ->setValue(int(hsv.getSaturation()*255));
+  valueValue->setValue(int(hsv.getValue     ()*255));
 
   canvas_->setHSV(hsv);
 
-  QColor rgb = canvas_->getRGB();
+  CRGBA rgb = canvas_->getRGB();
 
   setRGB(rgb);
 
@@ -385,147 +370,9 @@ setHSV(const QColor &hsv)
   active = false;
 }
 
-const QColor &
+const CHSV &
 CQColorWheel::
 getHSV() const
 {
   return canvas_->getHSV();
-}
-
-//-----------------
-
-class CQColorWheelCanvasTip : public CQToolTipIFace {
- public:
-  CQColorWheelCanvasTip(CQColorWheelCanvas *canvas) :
-   canvas_(canvas), widget_(0) {
-  }
-
- ~CQColorWheelCanvasTip() {
-    delete widget_;
-  }
-
-  QWidget *showWidget() {
-    if (! widget_)
-      widget_ = new CQPixmapColorTip;
-
-    updateWidget();
-
-    return widget_;
-  }
-
-  void hideWidget() {
-    delete widget_;
-
-    widget_ = 0;
-  }
-
-  bool trackMouse() const { return true; }
-
-  void updateWidget() {
-    if (! widget_) return;
-
-    QPoint p = canvas_->mapFromGlobal(QCursor::pos());
-
-    QColor c = canvas_->getColor(p.x(), p.y());
-
-    widget_->setColor(c);
-  }
-
- private:
-  CQColorWheelCanvas *canvas_;
-  CQPixmapColorTip   *widget_;
-};
-
-CQColorWheelCanvas::
-CQColorWheelCanvas(CQColorWheel *wheel, int radius, Qt::Orientation orient, bool show_swatches) :
- QWidget(NULL), CColorWheel(radius, orient, show_swatches), wheel_(wheel)
-{
-  setFocusPolicy(Qt::StrongFocus);
-
-  CQToolTip::setToolTip(this, new CQColorWheelCanvasTip(this));
-}
-
-CQColorWheelCanvas::
-~CQColorWheelCanvas()
-{
-}
-
-QColor
-CQColorWheelCanvas::
-getColor(int x, int y)
-{
-  QColor color(0,0,0,0);
-
-  CColorWheel::posToRGB(x, y, color);
-
-  return color;
-}
-
-void
-CQColorWheelCanvas::
-paintEvent(QPaintEvent *)
-{
-  QPainter painter(this);
-
-  QColor rgba(255*0.93,255*0.93,255*0.93);
-
-  painter.fillRect(rect(), QBrush(rgba));
-
-  painter_ = &painter;
-
-  CColorWheel::draw(width(), height());
-}
-
-void
-CQColorWheelCanvas::
-mousePressEvent(QMouseEvent *e)
-{
-  CColorWheel::select(e->pos().x(), e->pos().y());
-
-  wheel_->setRGB(getRGB());
-}
-
-void
-CQColorWheelCanvas::
-mouseMoveEvent(QMouseEvent *e)
-{
-  CColorWheel::select(e->pos().x(), e->pos().y());
-
-  wheel_->setRGB(getRGB());
-}
-
-void
-CQColorWheelCanvas::
-mouseReleaseEvent(QMouseEvent *)
-{
-}
-
-void
-CQColorWheelCanvas::
-setForeground(const QColor &fg)
-{
-  fg_ = fg;
-
-  painter_->setPen(fg);
-}
-
-void
-CQColorWheelCanvas::
-drawPoint(int x, int y)
-{
-  painter_->drawPoint(x, y);
-}
-
-void
-CQColorWheelCanvas::
-drawLine(int x1, int y1, int x2, int y2)
-{
-  painter_->drawLine(x1, y1, x2, y2);
-}
-
-void
-CQColorWheelCanvas::
-fillRectangle(const QRect &rect)
-{
-  painter_->fillRect(rect, QBrush(fg_));
 }

@@ -2,6 +2,7 @@
 #include <CQPixmapColorTip.h>
 #include <CQPixmapEd.h>
 #include <CQToolTip.h>
+#include <CQUtil.h>
 
 #include <QToolTip>
 #include <QPainter>
@@ -19,7 +20,7 @@ class CQPixmapCanvasTip : public CQToolTipIFace {
     delete widget_;
   }
 
-  QWidget *showWidget() {
+  QWidget *showWidget(const QPoint &) {
     if (! widget_)
       widget_ = new CQPixmapColorTip;
 
@@ -36,14 +37,19 @@ class CQPixmapCanvasTip : public CQToolTipIFace {
 
   bool trackMouse() const { return true; }
 
-  void updateWidget() {
-    if (! widget_) return;
+  bool updateWidget() {
+    if (! widget_) return false;
 
     QPoint p = canvas_->mapFromGlobal(QCursor::pos());
 
-    QColor c = canvas_->getColor(p);
+    QColor c;
+    int    ind;
 
-    widget_->setColor(c);
+    canvas_->getColor(p, c, ind);
+
+    widget_->setColor(c, ind);
+
+    return true;
   }
 
  private:
@@ -86,9 +92,9 @@ mousePressEvent(QMouseEvent *mouseEvent)
   pixmap_->pixelToWindow(mouseEvent->x(), mouseEvent->y(), &x_, &y_);
 
   if (button_ == Qt::MidButton) {
-    if (pixmap_->getImage().valid(x_, y_)) {
+    if (pixmap_->getImage()->validPixel(x_, y_)) {
       if (pixmap_->isColorMap()) {
-        int ind = pixmap_->getImage().pixelIndex(x_, y_);
+        int ind = pixmap_->getImage()->getColorIndexPixel(x_, y_);
 
         if (pixmap_->isFgActive())
           pixmap_->setFgColorNum(ind);
@@ -96,7 +102,11 @@ mousePressEvent(QMouseEvent *mouseEvent)
           pixmap_->setBgColorNum(ind);
       }
       else {
-        QColor c = pixmap_->getImage().colorPixel(x_, y_);
+        CRGBA rgba;
+
+        pixmap_->getImage()->getRGBAPixel(x_, y_, rgba);
+
+        QColor c = CQUtil::rgbaToColor(rgba);
 
         if (pixmap_->isFgActive())
           pixmap_->setFgColor(c);
@@ -201,7 +211,14 @@ mousePressEvent(QMouseEvent *mouseEvent)
 
     pixmap_->floodFill(x_, y_);
   }
+  else if (function == CQPixmap::FUNCTION_LARGEST_RECT) {
+    pixmap_->addUndoImage();
+
+    pixmap_->largestRect(x_, y_);
+  }
   else if (function == CQPixmap::FUNCTION_TEXT) {
+    pixmap_->addUndoImage();
+
     pixmap_->drawText(x_, y_);
   }
   else if (function == CQPixmap::FUNCTION_SET_HOT_SPOT) {
@@ -229,10 +246,6 @@ mouseMoveEvent(QMouseEvent *mouseEvent)
 
     if      (function == CQPixmap::FUNCTION_POINT) {
       x_ = x; y_ = y;
-
-      if (x_ < 0 || x_ >= pixmap_->getImage().width() ||
-          y_ < 0 || y_ >= pixmap_->getImage().height())
-        return;
 
       pixmap_->addUndoImage(QRect(x_, y_, 1, 1));
 
@@ -381,14 +394,16 @@ keyPressEvent(QKeyEvent *event)
   }
 }
 
-QColor
+void
 CQPixmapCanvas::
-getColor(const QPoint &p) const
+getColor(const QPoint &p, QColor &c, int &ind) const
 {
+  ind = -1;
+
   int x, y;
 
   if (pixmap_->pixelToWindow(p.x(), p.y(), &x, &y))
-    return pixmap_->getColor(x, y);
+    c = pixmap_->getColor(x, y);
   else
-    return QColor();
+    c = QColor();
 }
