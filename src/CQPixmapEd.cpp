@@ -8,6 +8,7 @@
 #include <CQPixmapRescaleDialog.h>
 #include <CQPixmapTextDialog.h>
 #include <CQPixmapAddColorDialog.h>
+#include <CQPixmapCache.h>
 
 #include <QApplication>
 #include <QLabel>
@@ -46,36 +47,36 @@
 #include <CQColorChooser.h>
 #include <CRGBName.h>
 
-#include <xpm/fliph.xpm>
-#include <xpm/flipv.xpm>
-#include <xpm/fold.xpm>
-#include <xpm/up.xpm>
-#include <xpm/down.xpm>
-#include <xpm/left.xpm>
-#include <xpm/right.xpm>
-#include <xpm/rotatel.xpm>
-#include <xpm/rotater.xpm>
+#include <svg/flip_x_svg.h>
+#include <svg/flip_y_svg.h>
+#include <svg/fold_svg.h>
+#include <svg/up_svg.h>
+#include <svg/down_svg.h>
+#include <svg/left_svg.h>
+#include <svg/right_svg.h>
+#include <svg/rotate_left_svg.h>
+#include <svg/rotate_right_svg.h>
 
-#include <xpm/clear.xpm>
-#include <xpm/set.xpm>
-#include <xpm/invert.xpm>
-#include <xpm/copy.xpm>
-#include <xpm/move.xpm>
-#include <xpm/mark.xpm>
-#include <xpm/unmark.xpm>
-#include <xpm/point.xpm>
-#include <xpm/curve.xpm>
-#include <xpm/line.xpm>
-#include <xpm/rect.xpm>
-#include <xpm/fill_rect.xpm>
-#include <xpm/circle.xpm>
-#include <xpm/fill_circle.xpm>
-#include <xpm/fill.xpm>
-#include <xpm/largest_rect.xpm>
-#include <xpm/text.xpm>
-#include <xpm/hot_spot.xpm>
-#include <xpm/undo_16.xpm>
-#include <xpm/redo_16.xpm>
+#include <svg/clear_svg.h>
+#include <svg/set_svg.h>
+#include <svg/invert_svg.h>
+#include <svg/copy_svg.h>
+#include <svg/move_svg.h>
+#include <svg/mark_svg.h>
+#include <svg/unmark_svg.h>
+#include <svg/point_svg.h>
+#include <svg/curve_svg.h>
+#include <svg/line_svg.h>
+#include <svg/rect_svg.h>
+#include <svg/fill_rect_svg.h>
+#include <svg/circle_svg.h>
+#include <svg/fill_circle_svg.h>
+#include <svg/fill_svg.h>
+#include <svg/largest_rect_svg.h>
+#include <svg/text_svg.h>
+#include <svg/hot_spot_svg.h>
+#include <svg/undo_svg.h>
+#include <svg/redo_svg.h>
 
 //-----
 
@@ -424,7 +425,7 @@ createMenus()
 
   undoItem_->setShortcut(QString("Ctrl+Z"));
   undoItem_->setStatusTip("Undo last change");
-  undoItem_->setIcon(QIcon(QPixmap(undo_16_data)));
+  undoItem_->setIcon(CQPixmapCacheInst->getIcon("UNDO"));
 
   connect(undoItem_, SIGNAL(triggered()), this, SLOT(undo()));
 
@@ -432,28 +433,28 @@ createMenus()
 
   redoItem_->setShortcut(QString("Ctrl+Y"));
   redoItem_->setStatusTip("Redo last undo");
-  redoItem_->setIcon(QIcon(QPixmap(redo_16_data)));
+  redoItem_->setIcon(CQPixmapCacheInst->getIcon("REDO"));
 
   connect(redoItem_, SIGNAL(triggered()), this, SLOT(redo()));
 
   clearItem_ = new QAction("&Clear", this); editMenu->addAction(clearItem_);
 
   clearItem_->setStatusTip("Clear all pixels in image");
-  clearItem_->setIcon(QIcon(QPixmap(clear_data)));
+  clearItem_->setIcon(CQPixmapCacheInst->getIcon("CLEAR"));
 
   connect(clearItem_, SIGNAL(triggered()), this, SLOT(clear()));
 
   setItem_ = new QAction("&Set", this); editMenu->addAction(setItem_);
 
   setItem_->setStatusTip("Set all pixels in image");
-  setItem_->setIcon(QIcon(QPixmap(set_data)));
+  setItem_->setIcon(CQPixmapCacheInst->getIcon("SET"));
 
   connect(setItem_, SIGNAL(triggered()), this, SLOT(set()));
 
   invertItem_ = new QAction("&Invert", this); editMenu->addAction(invertItem_);
 
   invertItem_->setStatusTip("Invert image");
-  invertItem_->setIcon(QIcon(QPixmap(invert_data)));
+  invertItem_->setIcon(CQPixmapCacheInst->getIcon("INVERT"));
 
   connect(invertItem_, SIGNAL(triggered()), this, SLOT(invert()));
 
@@ -487,7 +488,7 @@ createMenus()
   copyItem_->setCheckable(true);
 
   copyItem_->setStatusTip("Copy mode");
-  copyItem_->setIcon(QIcon(QPixmap(copy_data)));
+  copyItem_->setIcon(CQPixmapCacheInst->getIcon("COPY"));
 
   connect(copyItem_, SIGNAL(toggled(bool)), this, SLOT(setCopyMode()));
 
@@ -497,7 +498,7 @@ createMenus()
   moveItem_->setCheckable(true);
 
   moveItem_->setStatusTip("Move mode");
-  moveItem_->setIcon(QIcon(QPixmap(move_data)));
+  moveItem_->setIcon(CQPixmapCacheInst->getIcon("MOVE"));
 
   connect(moveItem_, SIGNAL(toggled(bool)), this, SLOT(setMoveMode()));
 
@@ -507,7 +508,7 @@ createMenus()
   markItem_->setCheckable(true);
 
   markItem_->setStatusTip("Mark mode");
-  markItem_->setIcon(QIcon(QPixmap(mark_data)));
+  markItem_->setIcon(CQPixmapCacheInst->getIcon("MARK"));
 
   connect(markItem_, SIGNAL(toggled(bool)), this, SLOT(setMarkMode()));
 
@@ -516,7 +517,7 @@ createMenus()
   unmarkItem_ = new QAction("&Unmark", this); functionMenu->addAction(unmarkItem_);
 
   unmarkItem_->setStatusTip("Unmark mode");
-  unmarkItem_->setIcon(QIcon(QPixmap(unmark_data)));
+  unmarkItem_->setIcon(CQPixmapCacheInst->getIcon("UNMARK"));
 
   connect(unmarkItem_, SIGNAL(triggered()), this, SLOT(unmark()));
 
@@ -526,7 +527,7 @@ createMenus()
   pointItem_->setCheckable(true); pointItem_->setChecked(true);
 
   pointItem_->setStatusTip("Point mode");
-  pointItem_->setIcon(QIcon(QPixmap(point_data)));
+  pointItem_->setIcon(CQPixmapCacheInst->getIcon("POINT"));
 
   connect(pointItem_, SIGNAL(toggled(bool)), this, SLOT(setPointMode()));
 
@@ -536,7 +537,7 @@ createMenus()
   curveItem_->setCheckable(true);
 
   curveItem_->setStatusTip("Curve mode");
-  curveItem_->setIcon(QIcon(QPixmap(curve_data)));
+  curveItem_->setIcon(CQPixmapCacheInst->getIcon("CURVE"));
 
   connect(curveItem_, SIGNAL(toggled(bool)), this, SLOT(setCurveMode()));
 
@@ -546,7 +547,7 @@ createMenus()
   lineItem_->setCheckable(true);
 
   lineItem_->setStatusTip("Line mode");
-  lineItem_->setIcon(QIcon(QPixmap(line_data)));
+  lineItem_->setIcon(CQPixmapCacheInst->getIcon("LINE"));
 
   connect(lineItem_, SIGNAL(toggled(bool)), this, SLOT(setLineMode()));
 
@@ -556,7 +557,7 @@ createMenus()
   rectItem_->setCheckable(true);
 
   rectItem_->setStatusTip("Rectangle mode");
-  rectItem_->setIcon(QIcon(QPixmap(rect_data)));
+  rectItem_->setIcon(CQPixmapCacheInst->getIcon("RECT"));
 
   connect(rectItem_, SIGNAL(toggled(bool)), this, SLOT(setRectangleMode()));
 
@@ -566,7 +567,7 @@ createMenus()
   fillRectItem_->setCheckable(true);
 
   fillRectItem_->setStatusTip("Filled rectangle mode");
-  fillRectItem_->setIcon(QIcon(QPixmap(fill_rect_data)));
+  fillRectItem_->setIcon(CQPixmapCacheInst->getIcon("FILL_RECT"));
 
   connect(fillRectItem_, SIGNAL(toggled(bool)), this, SLOT(setFilledRectangleMode()));
 
@@ -576,7 +577,7 @@ createMenus()
   circleItem_->setCheckable(true);
 
   circleItem_->setStatusTip("Circle mode");
-  circleItem_->setIcon(QIcon(QPixmap(circle_data)));
+  circleItem_->setIcon(CQPixmapCacheInst->getIcon("CIRCLE"));
 
   connect(circleItem_, SIGNAL(toggled(bool)), this, SLOT(setCircleMode()));
 
@@ -586,7 +587,7 @@ createMenus()
   fillCircleItem_->setCheckable(true);
 
   fillCircleItem_->setStatusTip("Filled circle mode");
-  fillCircleItem_->setIcon(QIcon(QPixmap(fill_circle_data)));
+  fillCircleItem_->setIcon(CQPixmapCacheInst->getIcon("FILL_CIRCLE"));
 
   connect(fillCircleItem_, SIGNAL(toggled(bool)), this, SLOT(setFilledCircleMode()));
 
@@ -596,7 +597,7 @@ createMenus()
   floodFillItem_->setCheckable(true);
 
   floodFillItem_->setStatusTip("Flood fill");
-  floodFillItem_->setIcon(QIcon(QPixmap(fill_data)));
+  floodFillItem_->setIcon(CQPixmapCacheInst->getIcon("FILL"));
 
   connect(floodFillItem_, SIGNAL(toggled(bool)), this, SLOT(setFloodFillMode()));
 
@@ -606,7 +607,7 @@ createMenus()
   largestRectItem_->setCheckable(true);
 
   largestRectItem_->setStatusTip("Largest Rectangle");
-  largestRectItem_->setIcon(QPixmap(largest_rect_data));
+  largestRectItem_->setIcon(CQPixmapCacheInst->getIcon("LARGEST_RECT"));
 
   connect(largestRectItem_, SIGNAL(toggled(bool)), this, SLOT(setLargestRectMode()));
 
@@ -616,7 +617,7 @@ createMenus()
   textItem_->setCheckable(true);
 
   textItem_->setStatusTip("Text mode");
-  textItem_->setIcon(QIcon(QPixmap(text_data)));
+  textItem_->setIcon(CQPixmapCacheInst->getIcon("TEXT"));
 
   connect(textItem_, SIGNAL(toggled(bool)), this, SLOT(setTextMode()));
 
@@ -626,7 +627,7 @@ createMenus()
   hotSpotItem_->setCheckable(true);
 
   hotSpotItem_->setStatusTip("Set Hot Spot mode");
-  hotSpotItem_->setIcon(QIcon(QPixmap(hot_spot_data)));
+  hotSpotItem_->setIcon(CQPixmapCacheInst->getIcon("HOT_SPOT"));
 
   connect(hotSpotItem_, SIGNAL(toggled(bool)), this, SLOT(setHotSpotMode()));
 
@@ -639,7 +640,7 @@ createMenus()
   leftItem_ = new QAction("&Left", this); moveMenu->addAction(leftItem_);
 
   leftItem_->setStatusTip("Scroll image left");
-  leftItem_->setIcon(QIcon(QPixmap(left_xpm)));
+  leftItem_->setIcon(CQPixmapCacheInst->getIcon("LEFT"));
 
   connect(leftItem_, SIGNAL(triggered()), this, SLOT(scrollLeft()));
 
@@ -648,7 +649,7 @@ createMenus()
   rightItem_ = new QAction("&Right", this); moveMenu->addAction(rightItem_);
 
   rightItem_->setStatusTip("Scroll image right");
-  rightItem_->setIcon(QIcon(QPixmap(right_xpm)));
+  rightItem_->setIcon(CQPixmapCacheInst->getIcon("RIGHT"));
 
   connect(rightItem_, SIGNAL(triggered()), this, SLOT(scrollRight()));
 
@@ -657,7 +658,7 @@ createMenus()
   upItem_ = new QAction("&Up", this); moveMenu->addAction(upItem_);
 
   upItem_->setStatusTip("Scroll image up");
-  upItem_->setIcon(QIcon(QPixmap(up_xpm)));
+  upItem_->setIcon(CQPixmapCacheInst->getIcon("UP"));
 
   connect(upItem_, SIGNAL(triggered()), this, SLOT(scrollUp()));
 
@@ -666,7 +667,7 @@ createMenus()
   downItem_ = new QAction("&Down", this); moveMenu->addAction(downItem_);
 
   downItem_->setStatusTip("Scroll image down");
-  downItem_->setIcon(QIcon(QPixmap(down_xpm)));
+  downItem_->setIcon(CQPixmapCacheInst->getIcon("DOWN"));
 
   connect(downItem_, SIGNAL(triggered()), this, SLOT(scrollDown()));
 
@@ -675,7 +676,7 @@ createMenus()
   flipXItem_ = new QAction("&Flip X", this); moveMenu->addAction(flipXItem_);
 
   flipXItem_->setStatusTip("Flip image in X direction");
-  flipXItem_->setIcon(QIcon(QPixmap(fliph_xpm)));
+  flipXItem_->setIcon(CQPixmapCacheInst->getIcon("FLIP_X"));
 
   connect(flipXItem_, SIGNAL(triggered()), this, SLOT(flipH()));
 
@@ -684,7 +685,7 @@ createMenus()
   flipYItem_ = new QAction("&Flip Y", this); moveMenu->addAction(flipYItem_);
 
   flipYItem_->setStatusTip("Flip image in Y direction");
-  flipYItem_->setIcon(QIcon(QPixmap(flipv_xpm)));
+  flipYItem_->setIcon(CQPixmapCacheInst->getIcon("FLIP_Y"));
 
   connect(flipYItem_, SIGNAL(triggered()), this, SLOT(flipV()));
 
@@ -693,7 +694,7 @@ createMenus()
   foldItem_ = new QAction("&Fold", this); moveMenu->addAction(foldItem_);
 
   foldItem_->setStatusTip("Flip image in both directions");
-  foldItem_->setIcon(QIcon(QPixmap(fold_xpm)));
+  foldItem_->setIcon(CQPixmapCacheInst->getIcon("FOLD"));
 
   connect(foldItem_, SIGNAL(triggered()), this, SLOT(flipHV()));
 
@@ -702,7 +703,7 @@ createMenus()
   rotateRItem_ = new QAction("&Rotate Right", this); moveMenu->addAction(rotateRItem_);
 
   rotateRItem_->setStatusTip("Rotate image right");
-  rotateRItem_->setIcon(QIcon(QPixmap(rotater_xpm)));
+  rotateRItem_->setIcon(CQPixmapCacheInst->getIcon("ROTATE_RIGHT"));
 
   connect(rotateRItem_, SIGNAL(triggered()), this, SLOT(rotateRight()));
 
@@ -711,7 +712,7 @@ createMenus()
   rotateLItem_ = new QAction("&Rotate Left", this); moveMenu->addAction(rotateLItem_);
 
   rotateLItem_->setStatusTip("Rotate image left");
-  rotateLItem_->setIcon(QIcon(QPixmap(rotatel_xpm)));
+  rotateLItem_->setIcon(CQPixmapCacheInst->getIcon("ROTATE_LEFT"));
 
   connect(rotateLItem_, SIGNAL(triggered()), this, SLOT(rotateLeft()));
 
@@ -821,7 +822,9 @@ createToolBars()
 
   addToolBar(Qt::TopToolBarArea, editToolBar_);
 
-  editToolBar_->setIconSize(QSize(16,16));
+  int is = style()->pixelMetric(QStyle::PM_SmallIconSize);
+
+  editToolBar_->setIconSize(QSize(is, is));
 
   editToolBar_->addAction(undoItem_);
   editToolBar_->addAction(redoItem_);
@@ -835,7 +838,7 @@ createToolBars()
 
   addToolBar(Qt::LeftToolBarArea, functionToolBar_);
 
-  functionToolBar_->setIconSize(QSize(16,16));
+  functionToolBar_->setIconSize(QSize(is, is));
 
   functionToolBar_->addAction(copyItem_);
   functionToolBar_->addAction(moveItem_);
@@ -859,7 +862,7 @@ createToolBars()
 
   addToolBar(Qt::TopToolBarArea, moveToolBar_);
 
-  moveToolBar_->setIconSize(QSize(16,16));
+  moveToolBar_->setIconSize(QSize(is, is));
 
   moveToolBar_->addAction(leftItem_);
   moveToolBar_->addAction(rightItem_);
@@ -960,15 +963,15 @@ createCentralWidget()
   QGridLayout *scroll_buttons_layout = new QGridLayout(scroll_buttons);
   scroll_buttons_layout->setMargin(2); scroll_buttons_layout->setSpacing(2);
 
-  CQImageButton *flip_x_button  = new CQImageButton(QPixmap(fliph_xpm));
-  CQImageButton *flip_y_button  = new CQImageButton(QPixmap(flipv_xpm));
-  CQImageButton *fold_button    = new CQImageButton(QPixmap(fold_xpm));
-  CQImageButton *up_button      = new CQImageButton(QPixmap(up_xpm));
-  CQImageButton *down_button    = new CQImageButton(QPixmap(down_xpm));
-  CQImageButton *left_button    = new CQImageButton(QPixmap(left_xpm));
-  CQImageButton *right_button   = new CQImageButton(QPixmap(right_xpm));
-  CQImageButton *rrotate_button = new CQImageButton(QPixmap(rotater_xpm));
-  CQImageButton *lrotate_button = new CQImageButton(QPixmap(rotatel_xpm));
+  CQImageButton *flip_x_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_X"));
+  CQImageButton *flip_y_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_Y"));
+  CQImageButton *fold_button    = new CQImageButton(CQPixmapCacheInst->getIcon("FOLD"));
+  CQImageButton *up_button      = new CQImageButton(CQPixmapCacheInst->getIcon("UP"));
+  CQImageButton *down_button    = new CQImageButton(CQPixmapCacheInst->getIcon("DOWN"));
+  CQImageButton *left_button    = new CQImageButton(CQPixmapCacheInst->getIcon("LEFT"));
+  CQImageButton *right_button   = new CQImageButton(CQPixmapCacheInst->getIcon("RIGHT"));
+  CQImageButton *rrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_RIGHT"));
+  CQImageButton *lrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_LEFT"));
 
   scroll_buttons_layout->addWidget(flip_x_button , 0, 0);
   scroll_buttons_layout->addWidget(flip_y_button , 0, 2);
@@ -2386,7 +2389,6 @@ void
 CQPixmap::
 largestRect(int x, int y)
 {
-#ifdef LARGEST_RECT
   if (isColorMap())
     image_->fillLargestRect(x, y, getColorNum());
   else
@@ -2395,7 +2397,6 @@ largestRect(int x, int y)
   setChanged();
 
   redraw();
-#endif
 }
 
 void
@@ -3296,5 +3297,5 @@ CQPixmapStatusLabel(const QString &str) :
 
   setFont(sfont);
 
-  setAlignment(Qt::AlignLeft | Qt::AlignBottom);
+  setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 }

@@ -57,6 +57,10 @@ CQPixmapFgButton::
 CQPixmapFgButton(CQPixmap *pixmap) :
  pixmap_(pixmap), size_(16)
 {
+  setObjectName("bg");
+
+  size_ = style()->pixelMetric(QStyle::PM_SmallIconSize);
+
   setFixedSize(size_, size_);
 
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

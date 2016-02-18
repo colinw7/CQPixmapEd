@@ -48,7 +48,6 @@ SOURCES       = CQPixmapAddColorDialog.cpp \
 		CQPixmapColorButton.cpp \
 		CQPixmapEd.cpp \
 		CQPixmapFgButton.cpp \
-		CQPixmapImage.cpp \
 		CQPixmapRescaleDialog.cpp \
 		CQPixmapResizeDialog.cpp \
 		CQPixmapTextDialog.cpp \
@@ -59,6 +58,7 @@ SOURCES       = CQPixmapAddColorDialog.cpp \
 		CQToolTip.cpp \
 		CQImageButton.cpp \
 		CQIntegerEdit.cpp \
+		CQPixmapCache.cpp \
 		CColorWheel.cpp moc_CQPixmapEd.cpp \
 		moc_CQPixmapAddColorDialog.cpp \
 		moc_CQPixmapBgButton.cpp \
@@ -79,7 +79,6 @@ OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/CQPixmapColorButton.o \
 		../obj/CQPixmapEd.o \
 		../obj/CQPixmapFgButton.o \
-		../obj/CQPixmapImage.o \
 		../obj/CQPixmapRescaleDialog.o \
 		../obj/CQPixmapResizeDialog.o \
 		../obj/CQPixmapTextDialog.o \
@@ -90,6 +89,7 @@ OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/CQToolTip.o \
 		../obj/CQImageButton.o \
 		../obj/CQIntegerEdit.o \
+		../obj/CQPixmapCache.o \
 		../obj/CColorWheel.o \
 		../obj/moc_CQPixmapEd.o \
 		../obj/moc_CQPixmapAddColorDialog.o \
@@ -369,7 +369,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d ../obj/CQPixmapEd1.0.0 || mkdir -p ../obj/CQPixmapEd1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQPixmapEd1.0.0/ && $(COPY_FILE) --parents ../include/CQPixmapEd.h ../include/CQPixmapImage.h CQPixmapAddColorDialog.h CQPixmapBgButton.h CQPixmapCanvas.h CQPixmapColorButton.h CQPixmapColorTip.h CQPixmapFgButton.h CQPixmapRescaleDialog.h CQPixmapResizeDialog.h CQPixmapTextDialog.h CQPixmapTipSwatch.h CQThumbnailCanvas.h CQColorChooser.h CQColorWheel.h CQColorWheelCanvas.h CQToolTip.h CQImageButton.h CQIntegerEdit.h CColorWheel.h ../obj/CQPixmapEd1.0.0/ && $(COPY_FILE) --parents CQPixmapAddColorDialog.cpp CQPixmapBgButton.cpp CQPixmapCanvas.cpp CQPixmapColorButton.cpp CQPixmapEd.cpp CQPixmapFgButton.cpp CQPixmapImage.cpp CQPixmapRescaleDialog.cpp CQPixmapResizeDialog.cpp CQPixmapTextDialog.cpp CQThumbnailCanvas.cpp CQColorChooser.cpp CQColorWheel.cpp CQColorWheelCanvas.cpp CQToolTip.cpp CQImageButton.cpp CQIntegerEdit.cpp CColorWheel.cpp ../obj/CQPixmapEd1.0.0/ && (cd `dirname ../obj/CQPixmapEd1.0.0` && $(TAR) CQPixmapEd1.0.0.tar CQPixmapEd1.0.0 && $(COMPRESS) CQPixmapEd1.0.0.tar) && $(MOVE) `dirname ../obj/CQPixmapEd1.0.0`/CQPixmapEd1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQPixmapEd1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) ../obj/CQPixmapEd1.0.0/ && $(COPY_FILE) --parents ../include/CQPixmapEd.h CQPixmapAddColorDialog.h CQPixmapBgButton.h CQPixmapCanvas.h CQPixmapColorButton.h CQPixmapColorTip.h CQPixmapFgButton.h CQPixmapRescaleDialog.h CQPixmapResizeDialog.h CQPixmapTextDialog.h CQPixmapTipSwatch.h CQThumbnailCanvas.h CQColorChooser.h CQColorWheel.h CQColorWheelCanvas.h CQToolTip.h CQImageButton.h CQPixmapCache.h CQIntegerEdit.h CColorWheel.h ../obj/CQPixmapEd1.0.0/ && $(COPY_FILE) --parents CQPixmapAddColorDialog.cpp CQPixmapBgButton.cpp CQPixmapCanvas.cpp CQPixmapColorButton.cpp CQPixmapEd.cpp CQPixmapFgButton.cpp CQPixmapRescaleDialog.cpp CQPixmapResizeDialog.cpp CQPixmapTextDialog.cpp CQThumbnailCanvas.cpp CQColorChooser.cpp CQColorWheel.cpp CQColorWheelCanvas.cpp CQToolTip.cpp CQImageButton.cpp CQIntegerEdit.cpp CQPixmapCache.cpp CColorWheel.cpp ../obj/CQPixmapEd1.0.0/ && (cd `dirname ../obj/CQPixmapEd1.0.0` && $(TAR) CQPixmapEd1.0.0.tar CQPixmapEd1.0.0 && $(COMPRESS) CQPixmapEd1.0.0.tar) && $(MOVE) `dirname ../obj/CQPixmapEd1.0.0`/CQPixmapEd1.0.0.tar.gz . && $(DEL_FILE) -r ../obj/CQPixmapEd1.0.0
 
 
 clean:compiler_clean 
@@ -3013,6 +3013,10 @@ compiler_clean: compiler_moc_header_clean
 		CQPixmapRescaleDialog.h \
 		CQPixmapTextDialog.h \
 		CQPixmapAddColorDialog.h \
+		CQPixmapCache.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtGui/QPixmap \
+		/usr/include/qt5/QtGui/QIcon \
 		/usr/include/qt5/QtWidgets/QApplication \
 		/usr/include/qt5/QtWidgets/qapplication.h \
 		/usr/include/qt5/QtCore/qcoreapplication.h \
@@ -3117,35 +3121,35 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtWidgets/QSpinBox \
 		/usr/include/qt5/QtWidgets/qspinbox.h \
 		CQColorChooser.h \
-		xpm/fliph.xpm \
-		xpm/flipv.xpm \
-		xpm/fold.xpm \
-		xpm/up.xpm \
-		xpm/down.xpm \
-		xpm/left.xpm \
-		xpm/right.xpm \
-		xpm/rotatel.xpm \
-		xpm/rotater.xpm \
-		xpm/clear.xpm \
-		xpm/set.xpm \
-		xpm/invert.xpm \
-		xpm/copy.xpm \
-		xpm/move.xpm \
-		xpm/mark.xpm \
-		xpm/unmark.xpm \
-		xpm/point.xpm \
-		xpm/curve.xpm \
-		xpm/line.xpm \
-		xpm/rect.xpm \
-		xpm/fill_rect.xpm \
-		xpm/circle.xpm \
-		xpm/fill_circle.xpm \
-		xpm/fill.xpm \
-		xpm/largest_rect.xpm \
-		xpm/text.xpm \
-		xpm/hot_spot.xpm \
-		xpm/undo_16.xpm \
-		xpm/redo_16.xpm
+		svg/flip_x_svg.h \
+		svg/flip_y_svg.h \
+		svg/fold_svg.h \
+		svg/up_svg.h \
+		svg/down_svg.h \
+		svg/left_svg.h \
+		svg/right_svg.h \
+		svg/rotate_left_svg.h \
+		svg/rotate_right_svg.h \
+		svg/clear_svg.h \
+		svg/set_svg.h \
+		svg/invert_svg.h \
+		svg/copy_svg.h \
+		svg/move_svg.h \
+		svg/mark_svg.h \
+		svg/unmark_svg.h \
+		svg/point_svg.h \
+		svg/curve_svg.h \
+		svg/line_svg.h \
+		svg/rect_svg.h \
+		svg/fill_rect_svg.h \
+		svg/circle_svg.h \
+		svg/fill_circle_svg.h \
+		svg/fill_svg.h \
+		svg/largest_rect_svg.h \
+		svg/text_svg.h \
+		svg/hot_spot_svg.h \
+		svg/undo_svg.h \
+		svg/redo_svg.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPixmapEd.o CQPixmapEd.cpp
 
 ../obj/CQPixmapFgButton.o: CQPixmapFgButton.cpp CQPixmapFgButton.h \
@@ -3354,105 +3358,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMatrixType.h \
 		../../CUtil/include/CThrow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPixmapFgButton.o CQPixmapFgButton.cpp
-
-../obj/CQPixmapImage.o: CQPixmapImage.cpp ../include/CQPixmapImage.h \
-		/usr/include/qt5/QtGui/QColor \
-		/usr/include/qt5/QtGui/qcolor.h \
-		/usr/include/qt5/QtGui/qrgb.h \
-		/usr/include/qt5/QtCore/qglobal.h \
-		/usr/include/qt5/QtCore/qconfig.h \
-		/usr/include/qt5/QtCore/qfeatures.h \
-		/usr/include/qt5/QtCore/qsystemdetection.h \
-		/usr/include/qt5/QtCore/qprocessordetection.h \
-		/usr/include/qt5/QtCore/qcompilerdetection.h \
-		/usr/include/qt5/QtCore/qglobalstatic.h \
-		/usr/include/qt5/QtCore/qatomic.h \
-		/usr/include/qt5/QtCore/qbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
-		/usr/include/qt5/QtCore/qgenericatomic.h \
-		/usr/include/qt5/QtCore/qatomic_msvc.h \
-		/usr/include/qt5/QtCore/qatomic_integrity.h \
-		/usr/include/qt5/QtCore/qoldbasicatomic.h \
-		/usr/include/qt5/QtCore/qatomic_vxworks.h \
-		/usr/include/qt5/QtCore/qatomic_power.h \
-		/usr/include/qt5/QtCore/qatomic_alpha.h \
-		/usr/include/qt5/QtCore/qatomic_armv7.h \
-		/usr/include/qt5/QtCore/qatomic_armv6.h \
-		/usr/include/qt5/QtCore/qatomic_armv5.h \
-		/usr/include/qt5/QtCore/qatomic_bfin.h \
-		/usr/include/qt5/QtCore/qatomic_ia64.h \
-		/usr/include/qt5/QtCore/qatomic_mips.h \
-		/usr/include/qt5/QtCore/qatomic_s390.h \
-		/usr/include/qt5/QtCore/qatomic_sh4a.h \
-		/usr/include/qt5/QtCore/qatomic_sparc.h \
-		/usr/include/qt5/QtCore/qatomic_gcc.h \
-		/usr/include/qt5/QtCore/qatomic_x86.h \
-		/usr/include/qt5/QtCore/qatomic_cxx11.h \
-		/usr/include/qt5/QtCore/qatomic_unix.h \
-		/usr/include/qt5/QtCore/qmutex.h \
-		/usr/include/qt5/QtCore/qlogging.h \
-		/usr/include/qt5/QtCore/qflags.h \
-		/usr/include/qt5/QtCore/qtypeinfo.h \
-		/usr/include/qt5/QtCore/qtypetraits.h \
-		/usr/include/qt5/QtCore/qsysinfo.h \
-		/usr/include/qt5/QtCore/qnamespace.h \
-		/usr/include/qt5/QtCore/qstringlist.h \
-		/usr/include/qt5/QtCore/qalgorithms.h \
-		/usr/include/qt5/QtCore/qdatastream.h \
-		/usr/include/qt5/QtCore/qscopedpointer.h \
-		/usr/include/qt5/QtCore/qiodevice.h \
-		/usr/include/qt5/QtCore/qobject.h \
-		/usr/include/qt5/QtCore/qobjectdefs.h \
-		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
-		/usr/include/qt5/QtCore/qstring.h \
-		/usr/include/qt5/QtCore/qchar.h \
-		/usr/include/qt5/QtCore/qbytearray.h \
-		/usr/include/qt5/QtCore/qrefcount.h \
-		/usr/include/qt5/QtCore/qarraydata.h \
-		/usr/include/qt5/QtCore/qstringbuilder.h \
-		/usr/include/qt5/QtCore/qlist.h \
-		/usr/include/qt5/QtCore/qiterator.h \
-		/usr/include/qt5/QtCore/qcoreevent.h \
-		/usr/include/qt5/QtCore/qmetatype.h \
-		/usr/include/qt5/QtCore/qvarlengtharray.h \
-		/usr/include/qt5/QtCore/qcontainerfwd.h \
-		/usr/include/qt5/QtCore/qisenum.h \
-		/usr/include/qt5/QtCore/qobject_impl.h \
-		/usr/include/qt5/QtCore/qpair.h \
-		/usr/include/qt5/QtCore/qregexp.h \
-		/usr/include/qt5/QtCore/qstringmatcher.h \
-		/usr/include/qt5/QtGui/QImage \
-		/usr/include/qt5/QtGui/qimage.h \
-		/usr/include/qt5/QtGui/qtransform.h \
-		/usr/include/qt5/QtGui/qmatrix.h \
-		/usr/include/qt5/QtGui/qpolygon.h \
-		/usr/include/qt5/QtCore/qvector.h \
-		/usr/include/qt5/QtCore/qpoint.h \
-		/usr/include/qt5/QtCore/qrect.h \
-		/usr/include/qt5/QtCore/qsize.h \
-		/usr/include/qt5/QtGui/qregion.h \
-		/usr/include/qt5/QtGui/qwindowdefs.h \
-		/usr/include/qt5/QtGui/qwindowdefs_win.h \
-		/usr/include/qt5/QtCore/qline.h \
-		/usr/include/qt5/QtGui/qpainterpath.h \
-		/usr/include/qt5/QtGui/qpaintdevice.h \
-		../../CMath/include/CMathGen.h \
-		../../CMath/include/NaN.h \
-		/usr/include/qt5/QtGui/QFontMetrics \
-		/usr/include/qt5/QtGui/qfontmetrics.h \
-		/usr/include/qt5/QtGui/qfont.h \
-		/usr/include/qt5/QtCore/qsharedpointer.h \
-		/usr/include/qt5/QtCore/qshareddata.h \
-		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
-		/usr/include/qt5/QtCore/qhash.h \
-		/usr/include/qt5/QtGui/QPainter \
-		/usr/include/qt5/QtGui/qpainter.h \
-		/usr/include/qt5/QtGui/qpixmap.h \
-		/usr/include/qt5/QtGui/qtextoption.h \
-		/usr/include/qt5/QtGui/qpen.h \
-		/usr/include/qt5/QtGui/qbrush.h \
-		/usr/include/qt5/QtGui/qfontinfo.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPixmapImage.o CQPixmapImage.cpp
 
 ../obj/CQPixmapRescaleDialog.o: CQPixmapRescaleDialog.cpp CQPixmapRescaleDialog.h \
 		/usr/include/qt5/QtWidgets/QDialog \
@@ -4996,6 +4901,96 @@ compiler_clean: compiler_moc_header_clean
 		/usr/include/qt5/QtGui/qvalidator.h \
 		/usr/include/qt5/QtCore/qregularexpression.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQIntegerEdit.o CQIntegerEdit.cpp
+
+../obj/CQPixmapCache.o: CQPixmapCache.cpp CQPixmapCache.h \
+		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/qstring.h \
+		/usr/include/qt5/QtCore/qchar.h \
+		/usr/include/qt5/QtCore/qglobal.h \
+		/usr/include/qt5/QtCore/qconfig.h \
+		/usr/include/qt5/QtCore/qfeatures.h \
+		/usr/include/qt5/QtCore/qsystemdetection.h \
+		/usr/include/qt5/QtCore/qprocessordetection.h \
+		/usr/include/qt5/QtCore/qcompilerdetection.h \
+		/usr/include/qt5/QtCore/qglobalstatic.h \
+		/usr/include/qt5/QtCore/qatomic.h \
+		/usr/include/qt5/QtCore/qbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt5/QtCore/qgenericatomic.h \
+		/usr/include/qt5/QtCore/qatomic_msvc.h \
+		/usr/include/qt5/QtCore/qatomic_integrity.h \
+		/usr/include/qt5/QtCore/qoldbasicatomic.h \
+		/usr/include/qt5/QtCore/qatomic_vxworks.h \
+		/usr/include/qt5/QtCore/qatomic_power.h \
+		/usr/include/qt5/QtCore/qatomic_alpha.h \
+		/usr/include/qt5/QtCore/qatomic_armv7.h \
+		/usr/include/qt5/QtCore/qatomic_armv6.h \
+		/usr/include/qt5/QtCore/qatomic_armv5.h \
+		/usr/include/qt5/QtCore/qatomic_bfin.h \
+		/usr/include/qt5/QtCore/qatomic_ia64.h \
+		/usr/include/qt5/QtCore/qatomic_mips.h \
+		/usr/include/qt5/QtCore/qatomic_s390.h \
+		/usr/include/qt5/QtCore/qatomic_sh4a.h \
+		/usr/include/qt5/QtCore/qatomic_sparc.h \
+		/usr/include/qt5/QtCore/qatomic_gcc.h \
+		/usr/include/qt5/QtCore/qatomic_x86.h \
+		/usr/include/qt5/QtCore/qatomic_cxx11.h \
+		/usr/include/qt5/QtCore/qatomic_unix.h \
+		/usr/include/qt5/QtCore/qmutex.h \
+		/usr/include/qt5/QtCore/qlogging.h \
+		/usr/include/qt5/QtCore/qflags.h \
+		/usr/include/qt5/QtCore/qtypeinfo.h \
+		/usr/include/qt5/QtCore/qtypetraits.h \
+		/usr/include/qt5/QtCore/qsysinfo.h \
+		/usr/include/qt5/QtCore/qbytearray.h \
+		/usr/include/qt5/QtCore/qrefcount.h \
+		/usr/include/qt5/QtCore/qnamespace.h \
+		/usr/include/qt5/QtCore/qarraydata.h \
+		/usr/include/qt5/QtCore/qstringbuilder.h \
+		/usr/include/qt5/QtGui/QPixmap \
+		/usr/include/qt5/QtGui/qpixmap.h \
+		/usr/include/qt5/QtGui/qpaintdevice.h \
+		/usr/include/qt5/QtGui/qwindowdefs.h \
+		/usr/include/qt5/QtCore/qobjectdefs.h \
+		/usr/include/qt5/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt5/QtGui/qwindowdefs_win.h \
+		/usr/include/qt5/QtCore/qrect.h \
+		/usr/include/qt5/QtCore/qsize.h \
+		/usr/include/qt5/QtCore/qpoint.h \
+		/usr/include/qt5/QtGui/qcolor.h \
+		/usr/include/qt5/QtGui/qrgb.h \
+		/usr/include/qt5/QtCore/qstringlist.h \
+		/usr/include/qt5/QtCore/qalgorithms.h \
+		/usr/include/qt5/QtCore/qdatastream.h \
+		/usr/include/qt5/QtCore/qscopedpointer.h \
+		/usr/include/qt5/QtCore/qiodevice.h \
+		/usr/include/qt5/QtCore/qobject.h \
+		/usr/include/qt5/QtCore/qlist.h \
+		/usr/include/qt5/QtCore/qiterator.h \
+		/usr/include/qt5/QtCore/qcoreevent.h \
+		/usr/include/qt5/QtCore/qmetatype.h \
+		/usr/include/qt5/QtCore/qvarlengtharray.h \
+		/usr/include/qt5/QtCore/qcontainerfwd.h \
+		/usr/include/qt5/QtCore/qisenum.h \
+		/usr/include/qt5/QtCore/qobject_impl.h \
+		/usr/include/qt5/QtCore/qpair.h \
+		/usr/include/qt5/QtCore/qregexp.h \
+		/usr/include/qt5/QtCore/qstringmatcher.h \
+		/usr/include/qt5/QtCore/qsharedpointer.h \
+		/usr/include/qt5/QtCore/qshareddata.h \
+		/usr/include/qt5/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt5/QtCore/qhash.h \
+		/usr/include/qt5/QtGui/qimage.h \
+		/usr/include/qt5/QtGui/qtransform.h \
+		/usr/include/qt5/QtGui/qmatrix.h \
+		/usr/include/qt5/QtGui/qpolygon.h \
+		/usr/include/qt5/QtCore/qvector.h \
+		/usr/include/qt5/QtGui/qregion.h \
+		/usr/include/qt5/QtCore/qline.h \
+		/usr/include/qt5/QtGui/qpainterpath.h \
+		/usr/include/qt5/QtGui/QIcon \
+		/usr/include/qt5/QtGui/qicon.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQPixmapCache.o CQPixmapCache.cpp
 
 ../obj/CColorWheel.o: CColorWheel.cpp CColorWheel.h \
 		../../CUtil/include/CRGBA.h \

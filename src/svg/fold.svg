@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="450.52805"
+   height="446.48743"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r"
+   sodipodi:docname="fold.svg">
+  <defs
+     id="defs4">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4199">
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="0"
+         id="stop4201" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop4203" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4199"
+       id="linearGradient4205"
+       x1="324.01074"
+       y1="315.60626"
+       x2="28.730017"
+       y2="25.911907"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2530449"
+     inkscape:cx="369.79942"
+     inkscape:cy="291.77326"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="2007"
+     inkscape:window-height="1356"
+     inkscape:window-x="1399"
+     inkscape:window-y="406"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(4.7866896,7.5336323)">
+    <path
+       transform="translate(15.416361,13.154129)"
+       style="fill:none;stroke:none"
+       d="m -20.203051,-20.687761 450.528051,0 0,446.487431 -450.528051,0 z"
+       id="rect2988" />
+    <path
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;white-space:normal;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;fill:url(#linearGradient4205);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:55.62585831;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate"
+       d="M 411.98438 34.324219 L 354.35547 50.791016 L 296.72656 67.255859 L 320.70117 90.453125 L 302.63477 108.51953 L 230.17383 180.98047 L 161.66602 112.47266 L 142.66602 93.474609 L 163.34375 72.103516 L 105.20312 57.548828 L 47.060547 42.992188 L 63.527344 100.62305 L 79.992188 158.25195 L 103.98242 133.45703 L 122.33203 151.80664 L 190.83984 220.31445 L 120.36523 290.78906 L 103.49219 307.66211 L 77.646484 282.6543 L 63.091797 340.79688 L 48.535156 398.9375 L 106.16602 382.47266 L 163.79492 366.00586 L 143.47461 346.3457 L 159.69922 330.12305 L 230.17383 259.64844 L 304.60156 334.07617 L 322.97656 352.45117 L 297.09766 379.19922 L 355.23828 393.75391 L 413.38086 408.30859 L 396.91406 350.67969 L 380.44922 293.05078 L 361.66211 312.46875 L 343.93555 294.74219 L 269.50781 220.31445 L 341.96875 147.85352 L 360.68555 129.13672 L 382.875 150.60742 L 397.42969 92.466797 L 411.98438 34.324219 z "
+       transform="translate(-4.7866896,-7.5336323)"
+       id="path3939" />
+  </g>
+</svg>

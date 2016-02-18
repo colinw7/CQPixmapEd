@@ -18,7 +18,6 @@ CQPixmapCanvas.cpp \
 CQPixmapColorButton.cpp \
 CQPixmapEd.cpp \
 CQPixmapFgButton.cpp \
-CQPixmapImage.cpp \
 CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
@@ -29,11 +28,11 @@ CQColorWheelCanvas.cpp \
 CQToolTip.cpp \
 CQImageButton.cpp \
 CQIntegerEdit.cpp \
+CQPixmapCache.cpp \
 CColorWheel.cpp \
 
 HEADERS += \
 ../include/CQPixmapEd.h \
-../include/CQPixmapImage.h \
 CQPixmapAddColorDialog.h \
 CQPixmapBgButton.h \
 CQPixmapCanvas.h \
@@ -50,6 +49,7 @@ CQColorWheel.h \
 CQColorWheelCanvas.h \
 CQToolTip.h \
 CQImageButton.h \
+CQPixmapCache.h \
 CQIntegerEdit.h \
 CColorWheel.h \
 

@@ -60,6 +60,8 @@ CQPixmapColorButton(CQPixmap *pixmap, int color_num) :
 {
   setObjectName(QString("color_%1").arg(color_num));
 
+  size_ = style()->pixelMetric(QStyle::PM_SmallIconSize);
+
   setFixedSize(size_, size_);
 
   setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
