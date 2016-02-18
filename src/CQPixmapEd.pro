@@ -22,7 +22,6 @@ CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
 CQThumbnailCanvas.cpp \
-CQColorChooser.cpp \
 CQColorWheel.cpp \
 CQColorWheelCanvas.cpp \
 CQToolTip.cpp \
@@ -44,7 +43,6 @@ CQPixmapResizeDialog.h \
 CQPixmapTextDialog.h \
 CQPixmapTipSwatch.h \
 CQThumbnailCanvas.h \
-CQColorChooser.h \
 CQColorWheel.h \
 CQColorWheelCanvas.h \
 CQToolTip.h \

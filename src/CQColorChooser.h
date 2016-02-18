@@ -2,7 +2,6 @@
 #define CQColorChooser_H
 
 #include <QWidget>
-#include <QColor>
 
 class QLineEdit;
 class QPushButton;
@@ -13,20 +12,35 @@ class CQAlphaButton;
 class CQColorChooser : public QWidget {
   Q_OBJECT
 
-  Q_PROPERTY(QColor  color     READ color     WRITE setColor    )
-  Q_PROPERTY(QString colorName READ colorName WRITE setColorName)
+  Q_PROPERTY(bool    editable  READ getEditable WRITE setEditable )
+  Q_PROPERTY(uint    style     READ getStyles   WRITE setStyles   )
+  Q_PROPERTY(QColor  color     READ color       WRITE setColor    )
+  Q_PROPERTY(QString colorName READ colorName   WRITE setColorName)
+
+  Q_ENUMS(Style);
+
+ public:
+  enum Style {
+    Text        = (1<<0),
+    ColorButton = (1<<1),
+    ColorLabel  = (1<<2),
+    ImageButton = (1<<3),
+    AlphaButton = (1<<4)
+  };
 
  public:
   CQColorChooser(QWidget *parent=0);
 
+  CQColorChooser(uint styles, QWidget *parent=0);
+
   bool getEditable() const { return editable_; }
   void setEditable(bool editable=true);
 
+  uint getStyles() const { return styles_; }
+  void setStyles(uint styles);
+
   const QColor &color() const;
   void setColor(const QColor &color, double alpha=1.0);
-
-  void setRGBA(const QColor &rgba);
-  QColor getRGBA() const;
 
   QString colorName() const;
   void setColorName(const QString &colorName, double alpha=1.0);
@@ -42,19 +56,33 @@ class CQColorChooser : public QWidget {
   void changeColor();
   void applyColor();
 
+  void setWidgetBackground(QWidget *widget, const QColor &color);
+
  private slots:
   void textColorChanged();
+  void imageButtonClicked();
+  void colorButtonClicked();
+  void alphaButtonChanged();
 
  signals:
   void colorChanged(const QColor &color);
   void colorChanged(const QString &colorName);
 
+  void colorApplied(const QColor &color);
+  void colorApplied(const QString &colorName);
+
  private:
-  bool       editable_;
-  QColor     color_;
-  QString    colorName_;
-  double     alpha_;
-  QLineEdit *cedit_;   // text color name
+  uint           styles_;
+  bool           editable_;
+  bool           has_alpha_;
+  QColor         color_;
+  QString        colorName_;
+  double         alpha_;
+  QLineEdit     *cedit_;   // text color name
+  QToolButton   *cbutton_; // click color button
+  QLabel        *clabel_;  // static color button
+  CQAlphaButton *alphab_;  // alpha slider
+  QToolButton   *button_;  // image click button
 };
 
 #endif
