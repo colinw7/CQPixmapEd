@@ -6,9 +6,6 @@
 class CQIntegerEdit : public QLineEdit {
   Q_OBJECT
 
- private:
-  int value_;
-
  public:
   CQIntegerEdit(QWidget *parent, int value=0);
   CQIntegerEdit(int value=0);
@@ -16,7 +13,6 @@ class CQIntegerEdit : public QLineEdit {
   virtual ~CQIntegerEdit() { }
 
   void setValue(int value);
-
   int getValue() const;
 
  private:
@@ -31,6 +27,9 @@ class CQIntegerEdit : public QLineEdit {
  private:
   void valueToWidget();
   bool widgetToValue();
+
+ private:
+  int value_ { 0 };
 };
 
 #endif

@@ -176,7 +176,7 @@ CQPixmap() :
  color_mode_           (COLOR_MAP),
  function_             (FUNCTION_POINT),
  xor_mode_             (XOR_NONE),
- filename_             ("scratch"),
+ filename_             ("scratch.xpm"),
  pixmap_               (0),
  pixmap_painter_       (0),
  painter_              (0),

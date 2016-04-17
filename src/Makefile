@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -O2 -fPIC -Wall -W -D_REENTRANT $(DEFINES)
 CXXFLAGS      = -m64 -pipe -std=c++11 -O2 -fPIC -Wall -W -D_REENTRANT $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../include -I../../CQColorSelector/include -I../../CQUtil/include -I../../CImageLib/include -I../../CFile/include -I../../CStrUtil/include -I../../CMath/include -I../../CFont/include -I../../COS/include -I../../CUndo/include -I../../CUtil/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I. -I../include -I../../CQColorSelector/include -I../../CQUtil/include -I../../CImageLib/include -I../../CFile/include -I../../CStrUtil/include -I../../CMath/include -I../../CFont/include -I../../COS/include -I../../CUndo/include -I../../CUtil/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtCore -I.moc
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -58,19 +58,19 @@ SOURCES       = CQPixmapAddColorDialog.cpp \
 		CQImageButton.cpp \
 		CQIntegerEdit.cpp \
 		CQPixmapCache.cpp \
-		CColorWheel.cpp moc_CQPixmapEd.cpp \
-		moc_CQPixmapAddColorDialog.cpp \
-		moc_CQPixmapBgButton.cpp \
-		moc_CQPixmapColorButton.cpp \
-		moc_CQPixmapFgButton.cpp \
-		moc_CQPixmapRescaleDialog.cpp \
-		moc_CQPixmapResizeDialog.cpp \
-		moc_CQPixmapTextDialog.cpp \
-		moc_CQColorWheel.cpp \
-		moc_CQColorWheelCanvas.cpp \
-		moc_CQToolTip.cpp \
-		moc_CQImageButton.cpp \
-		moc_CQIntegerEdit.cpp
+		CColorWheel.cpp .moc/moc_CQPixmapEd.cpp \
+		.moc/moc_CQPixmapAddColorDialog.cpp \
+		.moc/moc_CQPixmapBgButton.cpp \
+		.moc/moc_CQPixmapColorButton.cpp \
+		.moc/moc_CQPixmapFgButton.cpp \
+		.moc/moc_CQPixmapRescaleDialog.cpp \
+		.moc/moc_CQPixmapResizeDialog.cpp \
+		.moc/moc_CQPixmapTextDialog.cpp \
+		.moc/moc_CQColorWheel.cpp \
+		.moc/moc_CQColorWheelCanvas.cpp \
+		.moc/moc_CQToolTip.cpp \
+		.moc/moc_CQImageButton.cpp \
+		.moc/moc_CQIntegerEdit.cpp
 OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/CQPixmapBgButton.o \
 		../obj/CQPixmapCanvas.o \
@@ -120,6 +120,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_location.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -230,6 +232,8 @@ Makefile: CQPixmapEd.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_location.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri \
+		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri \
@@ -304,6 +308,8 @@ Makefile: CQPixmapEd.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64/qmak
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_gui_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_location.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimedia.pri:
+/usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_multimediawidgets.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_network_private.pri:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/modules/qt_lib_opengl.pri:
@@ -388,10 +394,10 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_CQPixmapEd.cpp moc_CQPixmapAddColorDialog.cpp moc_CQPixmapBgButton.cpp moc_CQPixmapColorButton.cpp moc_CQPixmapFgButton.cpp moc_CQPixmapRescaleDialog.cpp moc_CQPixmapResizeDialog.cpp moc_CQPixmapTextDialog.cpp moc_CQColorWheel.cpp moc_CQColorWheelCanvas.cpp moc_CQToolTip.cpp moc_CQImageButton.cpp moc_CQIntegerEdit.cpp
+compiler_moc_header_make_all: .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp .moc/moc_CQColorWheel.cpp .moc/moc_CQColorWheelCanvas.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQImageButton.cpp .moc/moc_CQIntegerEdit.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CQPixmapEd.cpp moc_CQPixmapAddColorDialog.cpp moc_CQPixmapBgButton.cpp moc_CQPixmapColorButton.cpp moc_CQPixmapFgButton.cpp moc_CQPixmapRescaleDialog.cpp moc_CQPixmapResizeDialog.cpp moc_CQPixmapTextDialog.cpp moc_CQColorWheel.cpp moc_CQColorWheelCanvas.cpp moc_CQToolTip.cpp moc_CQImageButton.cpp moc_CQIntegerEdit.cpp
-moc_CQPixmapEd.cpp: ../../CUtil/include/accessor.h \
+	-$(DEL_FILE) .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp .moc/moc_CQColorWheel.cpp .moc/moc_CQColorWheelCanvas.cpp .moc/moc_CQToolTip.cpp .moc/moc_CQImageButton.cpp .moc/moc_CQIntegerEdit.cpp
+.moc/moc_CQPixmapEd.cpp: ../../CUtil/include/accessor.h \
 		../../CImageLib/include/CImageLib.h \
 		../../CFile/include/CFile.h \
 		../../CFile/include/CFileBase.h \
@@ -411,6 +417,7 @@ moc_CQPixmapEd.cpp: ../../CUtil/include/accessor.h \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -538,9 +545,9 @@ moc_CQPixmapEd.cpp: ../../CUtil/include/accessor.h \
 		/usr/include/qt5/QtWidgets/qpushbutton.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		../include/CQPixmapEd.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../include/CQPixmapEd.h -o moc_CQPixmapEd.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../include/CQPixmapEd.h -o .moc/moc_CQPixmapEd.cpp
 
-moc_CQPixmapAddColorDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
+.moc/moc_CQPixmapAddColorDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -650,9 +657,9 @@ moc_CQPixmapAddColorDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapAddColorDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapAddColorDialog.h -o moc_CQPixmapAddColorDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapAddColorDialog.h -o .moc/moc_CQPixmapAddColorDialog.cpp
 
-moc_CQPixmapBgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
+.moc/moc_CQPixmapBgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtWidgets/qpushbutton.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -764,9 +771,9 @@ moc_CQPixmapBgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapBgButton.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapBgButton.h -o moc_CQPixmapBgButton.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapBgButton.h -o .moc/moc_CQPixmapBgButton.cpp
 
-moc_CQPixmapColorButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
+.moc/moc_CQPixmapColorButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtWidgets/qpushbutton.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -878,9 +885,9 @@ moc_CQPixmapColorButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapColorButton.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapColorButton.h -o moc_CQPixmapColorButton.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapColorButton.h -o .moc/moc_CQPixmapColorButton.cpp
 
-moc_CQPixmapFgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
+.moc/moc_CQPixmapFgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtWidgets/qpushbutton.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -992,9 +999,9 @@ moc_CQPixmapFgButton.cpp: /usr/include/qt5/QtWidgets/QPushButton \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapFgButton.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapFgButton.h -o moc_CQPixmapFgButton.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapFgButton.h -o .moc/moc_CQPixmapFgButton.cpp
 
-moc_CQPixmapRescaleDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
+.moc/moc_CQPixmapRescaleDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -1104,9 +1111,9 @@ moc_CQPixmapRescaleDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapRescaleDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapRescaleDialog.h -o moc_CQPixmapRescaleDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapRescaleDialog.h -o .moc/moc_CQPixmapRescaleDialog.cpp
 
-moc_CQPixmapResizeDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
+.moc/moc_CQPixmapResizeDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -1216,9 +1223,9 @@ moc_CQPixmapResizeDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapResizeDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapResizeDialog.h -o moc_CQPixmapResizeDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapResizeDialog.h -o .moc/moc_CQPixmapResizeDialog.cpp
 
-moc_CQPixmapTextDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
+.moc/moc_CQPixmapTextDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtWidgets/qdialog.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
@@ -1328,9 +1335,9 @@ moc_CQPixmapTextDialog.cpp: /usr/include/qt5/QtWidgets/QDialog \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
 		CQPixmapTextDialog.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapTextDialog.h -o moc_CQPixmapTextDialog.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapTextDialog.h -o .moc/moc_CQPixmapTextDialog.cpp
 
-moc_CQColorWheel.cpp: /usr/include/qt5/QtWidgets/QWidget \
+.moc/moc_CQColorWheel.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
@@ -1452,9 +1459,9 @@ moc_CQColorWheel.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		../../CUtil/include/CColorComponent.h \
 		../../CMath/include/CIPoint2D.h \
 		CQColorWheel.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQColorWheel.h -o moc_CQColorWheel.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQColorWheel.h -o .moc/moc_CQColorWheel.cpp
 
-moc_CQColorWheelCanvas.cpp: /usr/include/qt5/QtWidgets/QWidget \
+.moc/moc_CQColorWheelCanvas.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
@@ -1581,9 +1588,9 @@ moc_CQColorWheelCanvas.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIVector2D.h \
 		CQColorWheelCanvas.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQColorWheelCanvas.h -o moc_CQColorWheelCanvas.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQColorWheelCanvas.h -o .moc/moc_CQColorWheelCanvas.cpp
 
-moc_CQToolTip.cpp: /usr/include/qt5/QtWidgets/QWidget \
+.moc/moc_CQToolTip.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/qwidget.h \
 		/usr/include/qt5/QtGui/qwindowdefs.h \
 		/usr/include/qt5/QtCore/qglobal.h \
@@ -1695,9 +1702,9 @@ moc_CQToolTip.cpp: /usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtCore/qpointer.h \
 		/usr/include/qt5/QtCore/QMap \
 		CQToolTip.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o moc_CQToolTip.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o .moc/moc_CQToolTip.cpp
 
-moc_CQImageButton.cpp: /usr/include/qt5/QtWidgets/QToolButton \
+.moc/moc_CQImageButton.cpp: /usr/include/qt5/QtWidgets/QToolButton \
 		/usr/include/qt5/QtWidgets/qtoolbutton.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
 		/usr/include/qt5/QtGui/qicon.h \
@@ -1827,6 +1834,7 @@ moc_CQImageButton.cpp: /usr/include/qt5/QtWidgets/QToolButton \
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -1839,9 +1847,9 @@ moc_CQImageButton.cpp: /usr/include/qt5/QtWidgets/QToolButton \
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		CQImageButton.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQImageButton.h -o moc_CQImageButton.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQImageButton.h -o .moc/moc_CQImageButton.cpp
 
-moc_CQIntegerEdit.cpp: /usr/include/qt5/QtWidgets/QLineEdit \
+.moc/moc_CQIntegerEdit.cpp: /usr/include/qt5/QtWidgets/QLineEdit \
 		/usr/include/qt5/QtWidgets/qlineedit.h \
 		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qwidget.h \
@@ -1956,7 +1964,7 @@ moc_CQIntegerEdit.cpp: /usr/include/qt5/QtWidgets/QLineEdit \
 		/usr/include/qt5/QtGui/qpen.h \
 		/usr/include/qt5/QtGui/qtextoption.h \
 		CQIntegerEdit.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerEdit.h -o moc_CQIntegerEdit.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQIntegerEdit.h -o .moc/moc_CQIntegerEdit.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -2245,6 +2253,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -2463,6 +2472,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -2662,6 +2672,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -2758,6 +2769,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -3168,6 +3180,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -3778,6 +3791,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -4013,6 +4027,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CImageLib/include/CImageMgr.h \
@@ -4218,6 +4233,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CAlignType.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CUtil/include/COptVal.h \
 		../../CImageLib/include/CImagePtr.h \
 		../../CImageLib/include/CImageMgr.h \
@@ -4525,6 +4541,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CColorComponent.h \
 		../../CImageLib/include/CImageState.h \
 		../../CImageLib/include/CImage.h \
+		../../CUtil/include/CRGBACombineDef.h \
 		../../CMath/include/CISize2D.h \
 		../../CMath/include/CIBBox2D.h \
 		../../CMath/include/CIPoint2D.h \
@@ -4772,44 +4789,44 @@ compiler_clean: compiler_moc_header_clean
 		../../CMath/include/CMathMacros.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CColorWheel.o CColorWheel.cpp
 
-../obj/moc_CQPixmapEd.o: moc_CQPixmapEd.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapEd.o moc_CQPixmapEd.cpp
+../obj/moc_CQPixmapEd.o: .moc/moc_CQPixmapEd.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapEd.o .moc/moc_CQPixmapEd.cpp
 
-../obj/moc_CQPixmapAddColorDialog.o: moc_CQPixmapAddColorDialog.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapAddColorDialog.o moc_CQPixmapAddColorDialog.cpp
+../obj/moc_CQPixmapAddColorDialog.o: .moc/moc_CQPixmapAddColorDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapAddColorDialog.o .moc/moc_CQPixmapAddColorDialog.cpp
 
-../obj/moc_CQPixmapBgButton.o: moc_CQPixmapBgButton.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapBgButton.o moc_CQPixmapBgButton.cpp
+../obj/moc_CQPixmapBgButton.o: .moc/moc_CQPixmapBgButton.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapBgButton.o .moc/moc_CQPixmapBgButton.cpp
 
-../obj/moc_CQPixmapColorButton.o: moc_CQPixmapColorButton.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapColorButton.o moc_CQPixmapColorButton.cpp
+../obj/moc_CQPixmapColorButton.o: .moc/moc_CQPixmapColorButton.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapColorButton.o .moc/moc_CQPixmapColorButton.cpp
 
-../obj/moc_CQPixmapFgButton.o: moc_CQPixmapFgButton.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapFgButton.o moc_CQPixmapFgButton.cpp
+../obj/moc_CQPixmapFgButton.o: .moc/moc_CQPixmapFgButton.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapFgButton.o .moc/moc_CQPixmapFgButton.cpp
 
-../obj/moc_CQPixmapRescaleDialog.o: moc_CQPixmapRescaleDialog.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapRescaleDialog.o moc_CQPixmapRescaleDialog.cpp
+../obj/moc_CQPixmapRescaleDialog.o: .moc/moc_CQPixmapRescaleDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapRescaleDialog.o .moc/moc_CQPixmapRescaleDialog.cpp
 
-../obj/moc_CQPixmapResizeDialog.o: moc_CQPixmapResizeDialog.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapResizeDialog.o moc_CQPixmapResizeDialog.cpp
+../obj/moc_CQPixmapResizeDialog.o: .moc/moc_CQPixmapResizeDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapResizeDialog.o .moc/moc_CQPixmapResizeDialog.cpp
 
-../obj/moc_CQPixmapTextDialog.o: moc_CQPixmapTextDialog.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapTextDialog.o moc_CQPixmapTextDialog.cpp
+../obj/moc_CQPixmapTextDialog.o: .moc/moc_CQPixmapTextDialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapTextDialog.o .moc/moc_CQPixmapTextDialog.cpp
 
-../obj/moc_CQColorWheel.o: moc_CQColorWheel.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQColorWheel.o moc_CQColorWheel.cpp
+../obj/moc_CQColorWheel.o: .moc/moc_CQColorWheel.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQColorWheel.o .moc/moc_CQColorWheel.cpp
 
-../obj/moc_CQColorWheelCanvas.o: moc_CQColorWheelCanvas.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQColorWheelCanvas.o moc_CQColorWheelCanvas.cpp
+../obj/moc_CQColorWheelCanvas.o: .moc/moc_CQColorWheelCanvas.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQColorWheelCanvas.o .moc/moc_CQColorWheelCanvas.cpp
 
-../obj/moc_CQToolTip.o: moc_CQToolTip.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQToolTip.o moc_CQToolTip.cpp
+../obj/moc_CQToolTip.o: .moc/moc_CQToolTip.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQToolTip.o .moc/moc_CQToolTip.cpp
 
-../obj/moc_CQImageButton.o: moc_CQImageButton.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQImageButton.o moc_CQImageButton.cpp
+../obj/moc_CQImageButton.o: .moc/moc_CQImageButton.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQImageButton.o .moc/moc_CQImageButton.cpp
 
-../obj/moc_CQIntegerEdit.o: moc_CQIntegerEdit.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQIntegerEdit.o moc_CQIntegerEdit.cpp
+../obj/moc_CQIntegerEdit.o: .moc/moc_CQIntegerEdit.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQIntegerEdit.o .moc/moc_CQIntegerEdit.cpp
 
 ####### Install
 

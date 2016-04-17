@@ -10,6 +10,8 @@ CONFIG += staticlib
 
 QMAKE_CXXFLAGS += -std=c++11
 
+MOC_DIR = .moc
+
 # Input
 SOURCES += \
 CQPixmapAddColorDialog.cpp \
