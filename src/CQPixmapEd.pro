@@ -28,8 +28,6 @@ CQColorWheel.cpp \
 CQColorWheelCanvas.cpp \
 CQToolTip.cpp \
 CQImageButton.cpp \
-CQIntegerEdit.cpp \
-CQPixmapCache.cpp \
 CColorWheel.cpp \
 
 HEADERS += \
@@ -49,8 +47,6 @@ CQColorWheel.h \
 CQColorWheelCanvas.h \
 CQToolTip.h \
 CQImageButton.h \
-CQPixmapCache.h \
-CQIntegerEdit.h \
 CColorWheel.h \
 
 OBJECTS_DIR = ../obj
