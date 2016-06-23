@@ -58,10 +58,12 @@ INCLUDEPATH += \
 ../../CQColorSelector/include \
 ../../CQUtil/include \
 ../../CImageLib/include \
+../../CFileUtil/include \
 ../../CFile/include \
 ../../CStrUtil/include \
 ../../CMath/include \
 ../../CFont/include \
 ../../COS/include \
 ../../CUndo/include \
+../../CRGBName/include \
 ../../CUtil/include \

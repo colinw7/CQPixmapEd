@@ -116,7 +116,7 @@ draw(int w, int h)
 
   // draw current value on scale
 
-  double v;
+  double v = 0.0;
 
   if      (control_type_ == CONTROL_RED)
     v  = getRGB().getRed();
