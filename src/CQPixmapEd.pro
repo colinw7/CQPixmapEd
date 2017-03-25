@@ -24,11 +24,7 @@ CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
 CQThumbnailCanvas.cpp \
-CQColorWheel.cpp \
-CQColorWheelCanvas.cpp \
 CQToolTip.cpp \
-CQImageButton.cpp \
-CColorWheel.cpp \
 
 HEADERS += \
 ../include/CQPixmapEd.h \
@@ -43,11 +39,7 @@ CQPixmapResizeDialog.h \
 CQPixmapTextDialog.h \
 CQPixmapTipSwatch.h \
 CQThumbnailCanvas.h \
-CQColorWheel.h \
-CQColorWheelCanvas.h \
 CQToolTip.h \
-CQImageButton.h \
-CColorWheel.h \
 
 OBJECTS_DIR = ../obj
 
@@ -56,6 +48,8 @@ DESTDIR = ../lib
 INCLUDEPATH += \
 ../include \
 ../../CQColorSelector/include \
+../../CColorWheel/qinclude \
+../../CColorWheel/include \
 ../../CQUtil/include \
 ../../CImageLib/include \
 ../../CFileUtil/include \
