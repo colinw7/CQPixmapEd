@@ -24,7 +24,6 @@ CQPixmapRescaleDialog.cpp \
 CQPixmapResizeDialog.cpp \
 CQPixmapTextDialog.cpp \
 CQThumbnailCanvas.cpp \
-CQToolTip.cpp \
 
 HEADERS += \
 ../include/CQPixmapEd.h \
@@ -39,7 +38,6 @@ CQPixmapResizeDialog.h \
 CQPixmapTextDialog.h \
 CQPixmapTipSwatch.h \
 CQThumbnailCanvas.h \
-CQToolTip.h \
 
 OBJECTS_DIR = ../obj
 

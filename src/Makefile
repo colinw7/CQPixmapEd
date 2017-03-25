@@ -54,16 +54,14 @@ SOURCES       = CQPixmapAddColorDialog.cpp \
 		CQPixmapRescaleDialog.cpp \
 		CQPixmapResizeDialog.cpp \
 		CQPixmapTextDialog.cpp \
-		CQThumbnailCanvas.cpp \
-		CQToolTip.cpp .moc/moc_CQPixmapEd.cpp \
+		CQThumbnailCanvas.cpp .moc/moc_CQPixmapEd.cpp \
 		.moc/moc_CQPixmapAddColorDialog.cpp \
 		.moc/moc_CQPixmapBgButton.cpp \
 		.moc/moc_CQPixmapColorButton.cpp \
 		.moc/moc_CQPixmapFgButton.cpp \
 		.moc/moc_CQPixmapRescaleDialog.cpp \
 		.moc/moc_CQPixmapResizeDialog.cpp \
-		.moc/moc_CQPixmapTextDialog.cpp \
-		.moc/moc_CQToolTip.cpp
+		.moc/moc_CQPixmapTextDialog.cpp
 OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/CQPixmapBgButton.o \
 		../obj/CQPixmapCanvas.o \
@@ -74,7 +72,6 @@ OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/CQPixmapResizeDialog.o \
 		../obj/CQPixmapTextDialog.o \
 		../obj/CQThumbnailCanvas.o \
-		../obj/CQToolTip.o \
 		../obj/moc_CQPixmapEd.o \
 		../obj/moc_CQPixmapAddColorDialog.o \
 		../obj/moc_CQPixmapBgButton.o \
@@ -82,8 +79,7 @@ OBJECTS       = ../obj/CQPixmapAddColorDialog.o \
 		../obj/moc_CQPixmapFgButton.o \
 		../obj/moc_CQPixmapRescaleDialog.o \
 		../obj/moc_CQPixmapResizeDialog.o \
-		../obj/moc_CQPixmapTextDialog.o \
-		../obj/moc_CQToolTip.o
+		../obj/moc_CQPixmapTextDialog.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -158,8 +154,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CQPixmapResizeDialog.h \
 		CQPixmapTextDialog.h \
 		CQPixmapTipSwatch.h \
-		CQThumbnailCanvas.h \
-		CQToolTip.h CQPixmapAddColorDialog.cpp \
+		CQThumbnailCanvas.h CQPixmapAddColorDialog.cpp \
 		CQPixmapBgButton.cpp \
 		CQPixmapCanvas.cpp \
 		CQPixmapColorButton.cpp \
@@ -168,8 +163,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		CQPixmapRescaleDialog.cpp \
 		CQPixmapResizeDialog.cpp \
 		CQPixmapTextDialog.cpp \
-		CQThumbnailCanvas.cpp \
-		CQToolTip.cpp
+		CQThumbnailCanvas.cpp
 QMAKE_TARGET  = CQPixmapEd
 DESTDIR       = ../lib/#avoid trailing-slash linebreak
 TARGET        = libCQPixmapEd.a
@@ -356,8 +350,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../include/CQPixmapEd.h CQPixmapAddColorDialog.h CQPixmapBgButton.h CQPixmapCanvas.h CQPixmapColorButton.h CQPixmapColorTip.h CQPixmapFgButton.h CQPixmapRescaleDialog.h CQPixmapResizeDialog.h CQPixmapTextDialog.h CQPixmapTipSwatch.h CQThumbnailCanvas.h CQToolTip.h $(DISTDIR)/
-	$(COPY_FILE) --parents CQPixmapAddColorDialog.cpp CQPixmapBgButton.cpp CQPixmapCanvas.cpp CQPixmapColorButton.cpp CQPixmapEd.cpp CQPixmapFgButton.cpp CQPixmapRescaleDialog.cpp CQPixmapResizeDialog.cpp CQPixmapTextDialog.cpp CQThumbnailCanvas.cpp CQToolTip.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../include/CQPixmapEd.h CQPixmapAddColorDialog.h CQPixmapBgButton.h CQPixmapCanvas.h CQPixmapColorButton.h CQPixmapColorTip.h CQPixmapFgButton.h CQPixmapRescaleDialog.h CQPixmapResizeDialog.h CQPixmapTextDialog.h CQPixmapTipSwatch.h CQThumbnailCanvas.h $(DISTDIR)/
+	$(COPY_FILE) --parents CQPixmapAddColorDialog.cpp CQPixmapBgButton.cpp CQPixmapCanvas.cpp CQPixmapColorButton.cpp CQPixmapEd.cpp CQPixmapFgButton.cpp CQPixmapRescaleDialog.cpp CQPixmapResizeDialog.cpp CQPixmapTextDialog.cpp CQThumbnailCanvas.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -380,9 +374,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp .moc/moc_CQToolTip.cpp
+compiler_moc_header_make_all: .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp .moc/moc_CQToolTip.cpp
+	-$(DEL_FILE) .moc/moc_CQPixmapEd.cpp .moc/moc_CQPixmapAddColorDialog.cpp .moc/moc_CQPixmapBgButton.cpp .moc/moc_CQPixmapColorButton.cpp .moc/moc_CQPixmapFgButton.cpp .moc/moc_CQPixmapRescaleDialog.cpp .moc/moc_CQPixmapResizeDialog.cpp .moc/moc_CQPixmapTextDialog.cpp
 .moc/moc_CQPixmapEd.cpp: ../../CUtil/include/accessor.h \
 		../../CImageLib/include/CImageLib.h \
 		../../CFile/include/CFile.h \
@@ -440,9 +434,6 @@ compiler_moc_header_clean:
 .moc/moc_CQPixmapTextDialog.cpp: CQPixmapTextDialog.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQPixmapEd/src -I/home/colinw/git/CQPixmapEd/include -I/home/colinw/git/CQColorSelector/include -I/home/colinw/git/CColorWheel/qinclude -I/home/colinw/git/CColorWheel/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CFileUtil/include -I/home/colinw/git/CFile/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CFont/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUndo/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CUtil/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQPixmapTextDialog.h -o .moc/moc_CQPixmapTextDialog.cpp
 
-.moc/moc_CQToolTip.cpp: CQToolTip.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/colinw/git/CQPixmapEd/src -I/home/colinw/git/CQPixmapEd/include -I/home/colinw/git/CQColorSelector/include -I/home/colinw/git/CColorWheel/qinclude -I/home/colinw/git/CColorWheel/include -I/home/colinw/git/CQUtil/include -I/home/colinw/git/CImageLib/include -I/home/colinw/git/CFileUtil/include -I/home/colinw/git/CFile/include -I/home/colinw/git/CStrUtil/include -I/home/colinw/git/CMath/include -I/home/colinw/git/CFont/include -I/home/colinw/git/COS/include -I/home/colinw/git/CUndo/include -I/home/colinw/git/CRGBName/include -I/home/colinw/git/CUtil/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include CQToolTip.h -o .moc/moc_CQToolTip.cpp
-
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all:
@@ -499,7 +490,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUndo/include/CUndo.h \
 		CQPixmapColorTip.h \
 		CQPixmapTipSwatch.h \
-		CQToolTip.h \
+		../../CQUtil/include/CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
@@ -564,7 +555,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CImageLib/include/CImageAnim.h \
 		../../CImageLib/include/CImageFile.h \
 		../../CUndo/include/CUndo.h \
-		CQToolTip.h \
+		../../CQUtil/include/CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
@@ -629,7 +620,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUndo/include/CUndo.h \
 		CQPixmapColorTip.h \
 		CQPixmapTipSwatch.h \
-		CQToolTip.h \
+		../../CQUtil/include/CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
@@ -804,7 +795,7 @@ compiler_clean: compiler_moc_header_clean
 		../../CUndo/include/CUndo.h \
 		CQPixmapColorTip.h \
 		CQPixmapTipSwatch.h \
-		CQToolTip.h \
+		../../CQUtil/include/CQToolTip.h \
 		../../CQUtil/include/CQUtil.h \
 		../../CUtil/include/CEvent.h \
 		../../CUtil/include/CKeyType.h \
@@ -908,9 +899,6 @@ compiler_clean: compiler_moc_header_clean
 		../../CUtil/include/CLineJoinType.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQThumbnailCanvas.o CQThumbnailCanvas.cpp
 
-../obj/CQToolTip.o: CQToolTip.cpp CQToolTip.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/CQToolTip.o CQToolTip.cpp
-
 ../obj/moc_CQPixmapEd.o: .moc/moc_CQPixmapEd.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapEd.o .moc/moc_CQPixmapEd.cpp
 
@@ -934,9 +922,6 @@ compiler_clean: compiler_moc_header_clean
 
 ../obj/moc_CQPixmapTextDialog.o: .moc/moc_CQPixmapTextDialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQPixmapTextDialog.o .moc/moc_CQPixmapTextDialog.cpp
-
-../obj/moc_CQToolTip.o: .moc/moc_CQToolTip.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ../obj/moc_CQToolTip.o .moc/moc_CQToolTip.cpp
 
 ####### Install
 
