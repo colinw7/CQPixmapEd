@@ -13,31 +13,31 @@
 class CQPixmapCanvasTip : public CQToolTipIFace {
  public:
   CQPixmapCanvasTip(CQPixmapCanvas *canvas) :
-   canvas_(canvas), widget_(0) {
+   canvas_(canvas) {
   }
 
  ~CQPixmapCanvasTip() {
     delete widget_;
   }
 
-  QWidget *showWidget(const QPoint &) {
+  QWidget *showWidget(const QPoint &p) override {
     if (! widget_)
       widget_ = new CQPixmapColorTip;
 
-    updateWidget();
+    updateWidget(p);
 
     return widget_;
   }
 
-  void hideWidget() {
+  void hideWidget() override {
     delete widget_;
 
     widget_ = 0;
   }
 
-  bool trackMouse() const { return true; }
+  bool trackMouse() const override { return true; }
 
-  bool updateWidget() {
+  bool updateWidget(const QPoint &) override {
     if (! widget_) return false;
 
     QPoint p = canvas_->mapFromGlobal(QCursor::pos());
@@ -53,8 +53,8 @@ class CQPixmapCanvasTip : public CQToolTipIFace {
   }
 
  private:
-  CQPixmapCanvas   *canvas_;
-  CQPixmapColorTip *widget_;
+  CQPixmapCanvas   *canvas_ { nullptr };
+  CQPixmapColorTip *widget_ { nullptr };
 };
 
 //-----
