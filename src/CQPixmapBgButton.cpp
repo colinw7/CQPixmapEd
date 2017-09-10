@@ -16,16 +16,16 @@ class CQPixmapBgButtonTip : public CQToolTipIFace {
     delete tip_;
   }
 
-  QWidget *showWidget(const QPoint &) {
+  QWidget *showWidget(const QPoint &p) override {
     if (! tip_)
       tip_ = new CQPixmapColorTip;
 
-    updateWidget();
+    updateWidget(p);
 
     return tip_;
   }
 
-  void hideWidget() {
+  void hideWidget() override {
     delete tip_;
 
     tip_ = 0;
@@ -33,7 +33,7 @@ class CQPixmapBgButtonTip : public CQToolTipIFace {
 
   //bool trackMouse() const { return true; }
 
-  bool updateWidget() {
+  bool updateWidget(const QPoint &) override {
     if (! tip_) return false;
 
     QColor c;
