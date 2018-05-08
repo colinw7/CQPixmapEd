@@ -1,0 +1,1 @@
+all functions work on left/right button

@@ -1,4 +1,1 @@
-CQPixmapEd
-==========
-
-Qt Pixmap Editor
+doc/README.md

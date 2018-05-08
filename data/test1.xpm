@@ -1,0 +1,58 @@
+/* XPM */
+
+static char *
+test1_data[] = {
+  /* width height num_colors chars_per_pixel x_hot y_hot */
+  "32 32 15 1 0 0",
+
+  /* colors */
+  ". s symbol1 c #000000 m black",
+  "# s symbol2 c #000083 m black",
+  "a s symbol3 c #0000ff m black",
+  "b s symbol4 c #008300 m black",
+  "c s symbol5 c #00ff00 m black",
+  "d s symbol6 c #00ffff m white",
+  "e s symbol7 c #303000 m black",
+  "f s symbol8 c #838300 m black",
+  "g s symbol9 c #838383 m white",
+  "h s symbol10 c #9c9c00 m black",
+  "i s symbol11 c #c6c6c6 m white",
+  "j s symbol12 c #cece63 m white",
+  "k s symbol13 c #ffce9c m white",
+  "l s symbol14 c #ffff9c m white",
+  "m s symbol15 c #ffffff m white",
+
+  /* pixels */
+  "ddddhhhhhh.ddddddddddddddddddddd",
+  "dddhmlllllh.dddddddddddddddddddd",
+  "ddhmlllllllh.ddddddddddddddddddd",
+  "dhmlllllllllh.dddddddddddddddddd",
+  "hjjjjjjjjjjjjhhhhhhhhhhhhhhddddd",
+  "hmmmmmmmmmmmmmmmmmmmmmmmmmmedddd",
+  "hmlllllllllllllllkllklllkljedddd",
+  "hmlllllllllklklklllklllklkjedddd",
+  "hmllllllllllkgggggggggggggggfddd",
+  "hmlllllllllkgiiiiiiiiiiiiii...dd",
+  "hmllllllllkgmmmmmmmmmmmmmmfg..dd",
+  "hmllllllllgmiiiiiiiiiiiiiigg..dd",
+  "hmllllllklgmigggggggggggmigg..dd",
+  "hmlllllllkgmi..........#migg..dd",
+  "hmllllklllgmi.aaaaaaaaa#migg..dd",
+  "hmllllllklgmi.adaaaaaaa#migg..dd",
+  "hmlllllllkgmi.adaaaaaaa#migg..dd",
+  "hmlklkllklgmi.aaaaaaaaa#migg..dd",
+  "hmllllllllgmi.aaaaaaaaa#migg..dd",
+  "hmllklkllkgmi.aaaaaaaaa#migg..dd",
+  "hmklllllklgmi###########migg..dd",
+  "hmlllklkllgmimmmmmmmmmmmmigg..dd",
+  "hmklklkllkgmiiiiiiiiiiiiiigg.g.d",
+  "hjjjjjjjjjggggggggggggggggg.ggi.",
+  "deeeeeeeeg.................ggig.",
+  "ddddddddgmmmmmmmmmmmmmmmmmmmigg.",
+  "ddddddddgmiiiiiiiiiiiiiiiiiiggg.",
+  "ddddddddgmiicciiiiggggggggiiggg.",
+  "ddddddddgmiibbiiii........iiggg.",
+  "ddddddddgmiiiiiiiiiiiiiiiiiigg.d",
+  "ddddddddggggggggggggggggggggg.dd",
+  "ddddddddd....................ddd",
+};
