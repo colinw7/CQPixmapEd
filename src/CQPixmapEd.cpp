@@ -133,6 +133,8 @@ class CQPixmapPosLabel : public QWidget {
  public:
   CQPixmapPosLabel(CQPixmap *pixmap);
 
+  CQPixmap *pixmap() const { return pixmap_; }
+
   void update(int x, int y);
 
  private:
@@ -147,6 +149,8 @@ class CQPixmapFgControl : public QWidget {
  public:
   CQPixmapFgControl(CQPixmap *pixmap);
 
+  QLabel *label() const { return label_; }
+
   void update();
 
  private:
@@ -160,6 +164,8 @@ class CQPixmapFgControl : public QWidget {
 class CQPixmapBgControl : public QWidget {
  public:
   CQPixmapBgControl(CQPixmap *pixmap);
+
+  QLabel *label() const { return label_; }
 
   void update();
 
