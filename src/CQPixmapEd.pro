@@ -8,7 +8,9 @@ DEPENDPATH += .
 
 CONFIG += staticlib
 
-QMAKE_CXXFLAGS += -std=c++14
+QMAKE_CXXFLAGS += \
+-std=c++14 \
+-DCQUTIL_FONT \
 
 MOC_DIR = .moc
 

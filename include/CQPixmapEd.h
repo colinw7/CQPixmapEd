@@ -143,7 +143,7 @@ class CQPixmap : public QMainWindow {
 
   void setChanged();
 
-  QSize sizeHint() const { return QSize(700, 700); }
+  QSize sizeHint() const override { return QSize(700, 700); }
 
   CUndo *getUndo() const { return undo_; }
 
