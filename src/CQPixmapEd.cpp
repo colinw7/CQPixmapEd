@@ -350,7 +350,7 @@ void
 CQPixmap::
 createMenus()
 {
-  QMenu *fileMenu = new QMenu("&File", this);
+  auto *fileMenu = new QMenu("&File", this);
 
   menuBar()->addMenu(fileMenu);
 
@@ -423,7 +423,7 @@ createMenus()
 
   //--------
 
-  QMenu *editMenu = new QMenu("&Edit", this);
+  auto *editMenu = new QMenu("&Edit", this);
 
   menuBar()->addMenu(editMenu);
 
@@ -486,7 +486,7 @@ createMenus()
 
   //--------
 
-  QMenu *functionMenu = new QMenu("&Function", this);
+  auto *functionMenu = new QMenu("&Function", this);
 
   menuBar()->addMenu(functionMenu);
 
@@ -639,7 +639,7 @@ createMenus()
 
   //--------
 
-  QMenu *moveMenu = new QMenu("&Move", this);
+  auto *moveMenu = new QMenu("&Move", this);
 
   menuBar()->addMenu(moveMenu);
 
@@ -724,7 +724,7 @@ createMenus()
 
   //--------
 
-  QMenu *viewMenu = new QMenu("&View", this);
+  auto *viewMenu = new QMenu("&View", this);
 
   menuBar()->addMenu(viewMenu);
 
@@ -777,7 +777,7 @@ createMenus()
 
   //----
 
-  QMenu *colorMenu = new QMenu("&Color", this);
+  auto *colorMenu = new QMenu("&Color", this);
 
   menuBar()->addMenu(colorMenu);
 
@@ -803,13 +803,13 @@ createMenus()
 
   //--------
 
-  //QMenu *sepMenu = new QMenu("|", this);
+  //auto *sepMenu = new QMenu("|", this);
 
   //menuBar()->addMenu(sepMenu);
 
   //--------
 
-  QMenu *helpMenu = new QMenu("&Help", this);
+  auto *helpMenu = new QMenu("&Help", this);
 
   menuBar()->addMenu(helpMenu);
 
@@ -889,10 +889,10 @@ QWidget *
 CQPixmap::
 createCentralWidget()
 {
-  QWidget *widget = new QWidget;
+  auto *widget = new QWidget;
   widget->setObjectName("centralWidget");
 
-  QHBoxLayout *layout = new QHBoxLayout(widget);
+  auto *layout = new QHBoxLayout(widget);
   layout->setMargin(2); layout->setSpacing(2);
 
   //-------
@@ -902,7 +902,7 @@ createCentralWidget()
 
   layout->addWidget(controlArea_);
 
-  QVBoxLayout *controlLayout = new QVBoxLayout(controlArea_);
+  auto *controlLayout = new QVBoxLayout(controlArea_);
   controlLayout->setMargin(2); controlLayout->setSpacing(2);
 
   undoButton_ = new QPushButton("Undo");
@@ -917,19 +917,19 @@ createCentralWidget()
 
   controlLayout->addWidget(redoButton_);
 
-  QPushButton *clear = new QPushButton("Clear");
+  auto *clear = new QPushButton("Clear");
 
   connect(clear, SIGNAL(clicked()), this, SLOT(clear()));
 
   controlLayout->addWidget(clear);
 
-  QPushButton *set = new QPushButton("Set");
+  auto *set = new QPushButton("Set");
 
   connect(set, SIGNAL(clicked()), this, SLOT(set()));
 
   controlLayout->addWidget(set);
 
-  QPushButton *invert = new QPushButton("Invert");
+  auto *invert = new QPushButton("Invert");
 
   connect(invert, SIGNAL(clicked()), this, SLOT(invert()));
 
@@ -953,7 +953,7 @@ createCentralWidget()
 
   controlLayout->addWidget(markFunction_);
 
-  QPushButton *unmark = new QPushButton("Unmark");
+  auto *unmark = new QPushButton("Unmark");
 
   connect(unmark, SIGNAL(clicked()), this, SLOT(unmark()));
 
@@ -961,23 +961,23 @@ createCentralWidget()
 
   //------
 
-  QWidget *scroll_buttons = new QWidget;
+  auto *scroll_buttons = new QWidget;
   scroll_buttons->setObjectName("scroll_buttons");
 
   controlLayout->addWidget(scroll_buttons);
 
-  QGridLayout *scroll_buttons_layout = new QGridLayout(scroll_buttons);
+  auto *scroll_buttons_layout = new QGridLayout(scroll_buttons);
   scroll_buttons_layout->setMargin(2); scroll_buttons_layout->setSpacing(2);
 
-  CQImageButton *flip_x_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_X"));
-  CQImageButton *flip_y_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_Y"));
-  CQImageButton *fold_button    = new CQImageButton(CQPixmapCacheInst->getIcon("FOLD"));
-  CQImageButton *up_button      = new CQImageButton(CQPixmapCacheInst->getIcon("UP"));
-  CQImageButton *down_button    = new CQImageButton(CQPixmapCacheInst->getIcon("DOWN"));
-  CQImageButton *left_button    = new CQImageButton(CQPixmapCacheInst->getIcon("LEFT"));
-  CQImageButton *right_button   = new CQImageButton(CQPixmapCacheInst->getIcon("RIGHT"));
-  CQImageButton *rrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_RIGHT"));
-  CQImageButton *lrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_LEFT"));
+  auto *flip_x_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_X"));
+  auto *flip_y_button  = new CQImageButton(CQPixmapCacheInst->getIcon("FLIP_Y"));
+  auto *fold_button    = new CQImageButton(CQPixmapCacheInst->getIcon("FOLD"));
+  auto *up_button      = new CQImageButton(CQPixmapCacheInst->getIcon("UP"));
+  auto *down_button    = new CQImageButton(CQPixmapCacheInst->getIcon("DOWN"));
+  auto *left_button    = new CQImageButton(CQPixmapCacheInst->getIcon("LEFT"));
+  auto *right_button   = new CQImageButton(CQPixmapCacheInst->getIcon("RIGHT"));
+  auto *rrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_RIGHT"));
+  auto *lrotate_button = new CQImageButton(CQPixmapCacheInst->getIcon("ROTATE_LEFT"));
 
   scroll_buttons_layout->addWidget(flip_x_button , 0, 0);
   scroll_buttons_layout->addWidget(flip_y_button , 0, 2);
@@ -1067,7 +1067,7 @@ createCentralWidget()
 
   controlLayout->addWidget(setHotSpotFunction_);
 
-  QPushButton *clear_hot_spot = new QPushButton("Clear Hot Spot");
+  auto *clear_hot_spot = new QPushButton("Clear Hot Spot");
 
   connect(clear_hot_spot, SIGNAL(clicked()), this, SLOT(clearHotSpot()));
 
@@ -1077,30 +1077,30 @@ createCentralWidget()
 
   //-------
 
-  QWidget *color_canvas = new QWidget;
+  auto *color_canvas = new QWidget;
   color_canvas->setObjectName("color_canvas");
 
   layout->addWidget(color_canvas);
 
-  QVBoxLayout *color_canvas_layout = new QVBoxLayout(color_canvas);
+  auto *color_canvas_layout = new QVBoxLayout(color_canvas);
   color_canvas_layout->setMargin(2); color_canvas_layout->setSpacing(2);
 
   //-------
 
-  QWidget *colorControl = new QWidget;
+  auto *colorControl = new QWidget;
   colorControl->setObjectName("colorControl");
 
   colorControl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
   color_canvas_layout->addWidget(colorControl);
 
-  QHBoxLayout *colorControlLayout = new QHBoxLayout(colorControl);
+  auto *colorControlLayout = new QHBoxLayout(colorControl);
   colorControlLayout->setMargin(2); colorControlLayout->setSpacing(2);
 
   //---
 
 #if 0
-  QFrame *fg_bg_control = new QFrame;
+  auto *fg_bg_control = new QFrame;
   fg_bg_control->setObjectName("fg_bg_control");
 
   fg_bg_control->setFrameShape (QFrame::Panel);
@@ -1108,7 +1108,7 @@ createCentralWidget()
 
   colorControlLayout->addWidget(fg_bg_control);
 
-  QVBoxLayout *fg_bg_controlLayout = new QVBoxLayout(fg_bg_control);
+  auto *fg_bg_controlLayout = new QVBoxLayout(fg_bg_control);
   fg_bg_controlLayout->setMargin(2); fg_bg_controlLayout->setSpacing(2);
 
   fgControl_ = new CQPixmapFgControl(this);
@@ -1129,7 +1129,7 @@ createCentralWidget()
 
   colorControlLayout->addWidget(color_stack_);
 
-  QFrame *colormap_widget = new QFrame;
+  auto *colormap_widget = new QFrame;
   colormap_widget->setObjectName("colormap_widget");
 
   colormap_widget->setFrameShape (QFrame::Panel);
@@ -1144,13 +1144,13 @@ createCentralWidget()
 
   //---
 
-  QFrame *colorrgb_widget = new QFrame;
+  auto *colorrgb_widget = new QFrame;
   colorrgb_widget->setObjectName("colorrgb_widget");
 
   colorrgb_widget->setFrameShape (QFrame::Panel);
   colorrgb_widget->setFrameShadow(QFrame::Sunken);
 
-  QHBoxLayout *colorrgb_widget_layout = new QHBoxLayout(colorrgb_widget);
+  auto *colorrgb_widget_layout = new QHBoxLayout(colorrgb_widget);
   colorrgb_widget_layout->setMargin(2); colorrgb_widget_layout->setSpacing(2);
 
 #if 0
@@ -1184,7 +1184,7 @@ createCentralWidget()
 
   //---
 
-  QFrame *thumbnail_frame = new QFrame;
+  auto *thumbnail_frame = new QFrame;
   thumbnail_frame->setObjectName("thumbnail_frame");
 
   thumbnail_frame->setFrameShape (QFrame::Panel);
@@ -1192,7 +1192,7 @@ createCentralWidget()
 
   colorControlLayout->addWidget(thumbnail_frame);
 
-  QHBoxLayout *thumbnail_layout = new QHBoxLayout(thumbnail_frame);
+  auto *thumbnail_layout = new QHBoxLayout(thumbnail_frame);
   thumbnail_layout->setMargin(2); thumbnail_layout->setSpacing(2);
 
   thumbnail_canvas_ = new CQThumbnailCanvas(this);
@@ -1201,7 +1201,7 @@ createCentralWidget()
 
   //-------
 
-  QFrame *canvas_frame = new QFrame;
+  auto *canvas_frame = new QFrame;
   canvas_frame->setObjectName("canvas_frame");
 
   canvas_frame->setFrameShape (QFrame::Panel);
@@ -1209,11 +1209,11 @@ createCentralWidget()
 
   color_canvas_layout->addWidget(canvas_frame);
 
-  QVBoxLayout *scrolled_canvas_layout = new QVBoxLayout(canvas_frame);
+  auto *scrolled_canvas_layout = new QVBoxLayout(canvas_frame);
 
   scrolled_canvas_layout->setMargin(2); scrolled_canvas_layout->setSpacing(2);
 
-  QScrollArea *scrolled_canvas = new QScrollArea;
+  auto *scrolled_canvas = new QScrollArea;
 
   canvas_ = new CQPixmapCanvas(this);
 
@@ -1244,7 +1244,7 @@ void
 CQPixmap::
 createStatusBar()
 {
-  QStatusBar *sbar = statusBar();
+  auto *sbar = statusBar();
 
   filenameLabel_ = new CQPixmapFilenameLabel(this);
 
@@ -1252,7 +1252,7 @@ createStatusBar()
 
   //---
 
-  QWidget *spacer = new QWidget;
+  auto *spacer = new QWidget;
 
   sbar->insertPermanentWidget(1, spacer, 1);
 
@@ -1322,7 +1322,7 @@ updateStatusMessage()
     if (bg_num < 0)
       bg_str += "#0000000";
     else {
-      QColor bg = CQUtil::rgbaToColor(image_->getColor(bg_num));
+      auto bg = CQUtil::rgbaToColor(image_->getColor(bg_num));
 
       bg_str += bg.name();
     }
@@ -1336,7 +1336,7 @@ updateStatusMessage()
     if (fg_num < 0)
       fg_str += "#0000000";
     else {
-      QColor fg = CQUtil::rgbaToColor(image_->getColor(fg_num));
+      auto fg = CQUtil::rgbaToColor(image_->getColor(fg_num));
 
       fg_str += fg.name();
     }
@@ -1366,7 +1366,7 @@ void
 CQPixmap::
 promptLoadImage()
 {
-  QString fileName = QFileDialog::getOpenFileName(this,
+  auto fileName = QFileDialog::getOpenFileName(this,
     "Load Image", "", "Image Files (*.bmp *.gif *.jpg *.png *.xpm)");
 
   if (fileName.length())
@@ -1377,7 +1377,7 @@ void
 CQPixmap::
 promptInsertImage()
 {
-  QString fileName = QFileDialog::getOpenFileName(this,
+  auto fileName = QFileDialog::getOpenFileName(this,
     "Insert Image", "", "Image Files (*.bmp *.gif *.jpg *.png *.xpm)");
 
   if (fileName.length())
@@ -1400,7 +1400,7 @@ void
 CQPixmap::
 promptSaveImage()
 {
-  QString fileName = QFileDialog::getSaveFileName(this,
+  auto fileName = QFileDialog::getSaveFileName(this,
     "Save Image", "", "Image Files (*.bmp *.gif *.jpg *.png *.xpm)");
 
   if (! fileName.length())
@@ -1420,7 +1420,7 @@ void
 CQPixmap::
 promptResizeImage()
 {
-  CQPixmapResizeDialog *dialog = new CQPixmapResizeDialog(this);
+  auto *dialog = new CQPixmapResizeDialog(this);
 
   dialog->init(image_->getWidth(), image_->getHeight());
 
@@ -1433,7 +1433,7 @@ void
 CQPixmap::
 promptRescaleImage()
 {
-  CQPixmapRescaleDialog *dialog = new CQPixmapRescaleDialog(this);
+  auto *dialog = new CQPixmapRescaleDialog(this);
 
   dialog->init(image_->getWidth(), image_->getHeight(), false);
 
@@ -1501,7 +1501,7 @@ void
 CQPixmap::
 setTextDlg()
 {
-  CQPixmapTextDialog *dialog = new CQPixmapTextDialog(this);
+  auto *dialog = new CQPixmapTextDialog(this);
 
   dialog->init(drawText_);
 
@@ -1523,7 +1523,7 @@ setFontDlg()
 {
   bool ok;
 
-  QFont font = QFontDialog::getFont(&ok, drawFont_, this);
+  auto font = QFontDialog::getFont(&ok, drawFont_, this);
 
   if (! ok) return;
 
@@ -1579,7 +1579,7 @@ addColorDialog()
   if (! isColorMap())
     return;
 
-  CQPixmapAddColorDialog *dialog = new CQPixmapAddColorDialog(this);
+  auto *dialog = new CQPixmapAddColorDialog(this);
 
 #if 0
   connect(dialog, SIGNAL(addColor(const QString &)), this, SLOT(addColor(const QString &)));
@@ -2313,7 +2313,7 @@ void
 CQPixmap::
 addColorButton(int i)
 {
-  CQPixmapColorButton *button = new CQPixmapColorButton(this, i);
+  auto *button = new CQPixmapColorButton(this, i);
 
   colormap_widget_layout_->addWidget(button, i / numColorColumns_, i % numColorColumns_);
 
@@ -2324,7 +2324,7 @@ void
 CQPixmap::
 addColorSpacer(int i)
 {
-  QLabel *spacer = new QLabel(this);
+  auto *spacer = new QLabel(this);
 
   colormap_widget_layout_->addWidget(spacer, i / numColorColumns_, i % numColorColumns_);
 }
@@ -3130,7 +3130,7 @@ CQPixmapFilenameLabel(CQPixmap *pixmap) :
 {
   setObjectName("filename");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(0); layout->setSpacing(2);
 
   label_    = new CQPixmapStatusLabel("Filename:");
@@ -3155,7 +3155,7 @@ CQPixmapSizeLabel(CQPixmap *pixmap) :
 {
   setObjectName("size");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(0); layout->setSpacing(2);
 
   label_ = new CQPixmapStatusLabel("Size:");
@@ -3181,7 +3181,7 @@ CQPixmapPosLabel(CQPixmap *pixmap) :
 {
   setObjectName("pos");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(0); layout->setSpacing(2);
 
   label_ = new CQPixmapStatusLabel("Pos:");
@@ -3212,7 +3212,7 @@ CQPixmapGridSize(CQPixmap *pixmap) :
 {
   setObjectName("grid_size");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(0); layout->setSpacing(2);
 
   label_ = new CQPixmapStatusLabel("Grid Size:");
@@ -3242,10 +3242,10 @@ CQPixmapFgControl(CQPixmap *pixmap) :
 {
   setObjectName("fg_control");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 
-  QLabel *label = new CQPixmapStatusLabel("Fg:");
+  auto *label = new CQPixmapStatusLabel("Fg:");
 
   button_ = new CQPixmapFgButton(pixmap_);
 
@@ -3268,10 +3268,10 @@ CQPixmapBgControl(CQPixmap *pixmap) :
 {
   setObjectName("bg_control");
 
-  QHBoxLayout *layout = new QHBoxLayout(this);
+  auto *layout = new QHBoxLayout(this);
   layout->setMargin(2); layout->setSpacing(2);
 
-  QLabel *label = new CQPixmapStatusLabel("Bg:");
+  auto *label = new CQPixmapStatusLabel("Bg:");
 
   button_ = new CQPixmapBgButton(pixmap_);
 
@@ -3292,7 +3292,7 @@ CQPixmapStatusLabel::
 CQPixmapStatusLabel(const QString &str) :
  QLabel(str)
 {
-  QFont sfont = font();
+  auto sfont = font();
 
   QFontMetrics fm(sfont);
 
