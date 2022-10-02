@@ -193,10 +193,10 @@ CQPixmap() :
  bg_color_num_         (0),
  fg_color_num_         (1),
  transparent_color_num_(2),
- bg_color_             (QColor(255,255,255)),
- fg_color_             (QColor(0,0,0)),
+ bg_color_             (QColor(255, 255, 255)),
+ fg_color_             (QColor(0, 0, 0)),
  color_num_            (0),
- color_                (QColor(255,255,255)),
+ color_                (QColor(255, 255, 255)),
  fg_active_            (true),
  numColorColumns_      (32),
  color_spacer_         (0),
@@ -2045,14 +2045,14 @@ newImage()
   image_->setDataSize(32, 32);
 
   if (isColorMap()) {
-    image_->addColor(CRGBA(0,0,0,1)); // black
-    image_->addColor(CRGBA(1,1,1,1)); // white
-    image_->addColor(CRGBA(0,0,0,0)); // transparent
+    image_->addColor(CRGBA(0, 0, 0, 1)); // black
+    image_->addColor(CRGBA(1, 1, 1, 1)); // white
+    image_->addColor(CRGBA(0, 0, 0, 0)); // transparent
 
     image_->setColorIndexData(1U); // white
   }
   else
-    image_->setRGBAData(CRGBA(1,1,1));
+    image_->setRGBAData(CRGBA(1, 1, 1));
 
   initImage();
 }
@@ -2069,14 +2069,14 @@ loadImage(const std::string &fileName)
     image->setDataSize(32, 32);
 
     if (isColorMap()) {
-      image->addColor(CRGBA(0,0,0,1)); // black
-      image->addColor(CRGBA(1,1,1,1)); // white
-      image->addColor(CRGBA(0,0,0,0)); // transparent
+      image->addColor(CRGBA(0, 0, 0, 1)); // black
+      image->addColor(CRGBA(1, 1, 1, 1)); // white
+      image->addColor(CRGBA(0, 0, 0, 0)); // transparent
 
       image->setColorIndexData(1U); // white
     }
     else
-      image->setRGBAData(CRGBA(1,1,1));
+      image->setRGBAData(CRGBA(1, 1, 1));
   }
 
   loadImage(image);
@@ -2246,7 +2246,7 @@ initColors()
     }
 
     if (transparent_color_num == -1 && num_colors < 256) {
-      transparent_color_num = image_->addColor(CRGBA(0,0,0,0));
+      transparent_color_num = image_->addColor(CRGBA(0, 0, 0, 0));
 
       ++num_colors;
     }
@@ -2475,7 +2475,7 @@ getPixmap()
 
       startPainter();
 
-      QColor color(178,178,178);
+      QColor color(178, 178, 178);
 
       QBrush brush;
 
@@ -2524,7 +2524,7 @@ getPixmap()
 
         windowToPixel(x_hot_, y_hot_, &px, &py);
 
-        QColor color(0,0,0);
+        QColor color(0, 0, 0);
 
         brush.setColor(color);
         brush.setStyle(Qt::CrossPattern);
@@ -2588,7 +2588,8 @@ void
 CQPixmap::
 xorStart(XorMode mode)
 {
-  xor_pixmap_ = QPixmap::grabWidget(canvas_);
+  //xor_pixmap_ = QPixmap::grabWidget(canvas_);
+  xor_pixmap_ = canvas_->grab();
 
   xor_mode_ = mode;
 }
@@ -2886,7 +2887,7 @@ drawCanvasPoint(int x, int y)
     if (grid_ && gridSize() > 4)
       drawCanvasRect(x, y, Qt::Dense6Pattern);
     else
-      drawCanvasRect(x, y, QColor(128,128,128));
+      drawCanvasRect(x, y, QColor(128, 128, 128));
 #else
     drawCanvasRect(x, y, Qt::Dense6Pattern);
 #endif
@@ -2914,9 +2915,9 @@ drawCanvasRect(int x, int y, const QColor &c)
     QColor color;
 
     if (qGray(c.red(), c.green(), c.blue()) > 128)
-      color = QColor(0,0,0);
+      color = QColor(0, 0, 0);
     else
-      color = QColor(255,255,255);
+      color = QColor(255, 255, 255);
 
     painter_->setPen(color);
 
@@ -2938,20 +2939,20 @@ drawCanvasRect(int x, int y, Qt::BrushStyle brushStyle)
 
   startPainter();
 
-  QColor c(196,196,196);
+  QColor c(196, 196, 196);
 
   brush.setColor(c);
   brush.setStyle(Qt::SolidPattern);
 
   painter_->fillRect(px, py, gridSize(), gridSize(), brush);
 
-  brush.setColor(QColor(0,0,0));
+  brush.setColor(QColor(0, 0, 0));
   brush.setStyle(brushStyle);
 
   painter_->fillRect(px, py, gridSize(), gridSize(), brush);
 
   if (grid_ && gridSize() > 4) {
-    QColor color(0,0,0);
+    QColor color(0, 0, 0);
 
     painter_->setPen(color);
 
@@ -2990,10 +2991,10 @@ drawXorCanvasPoint(int x, int y)
   painter_->fillRect(px, py, gridSize(), gridSize(), brush);
 
   if (grid_ && gridSize() > 4) {
-    QColor color(255,255,255);
+    QColor color(255, 255, 255);
 
     if (qGray(c.red(), c.green(), c.blue()) > 128)
-      color = QColor(0,0,0);
+      color = QColor(0, 0, 0);
 
     painter_->setPen(color);
 
@@ -3191,7 +3192,7 @@ CQPixmapPosLabel(CQPixmap *pixmap) :
 
   QFontMetrics fm(font());
 
-  pos_->setFixedWidth(fm.width("888, 888"));
+  pos_->setFixedWidth(fm.horizontalAdvance("888, 888"));
 
   layout->addWidget(label_);
   layout->addWidget(pos_ );

@@ -91,7 +91,7 @@ mousePressEvent(QMouseEvent *mouseEvent)
 
   pixmap_->pixelToWindow(mouseEvent->x(), mouseEvent->y(), &x_, &y_);
 
-  if (button_ == Qt::MidButton) {
+  if (button_ == Qt::MiddleButton) {
     if (pixmap_->getImage()->validPixel(x_, y_)) {
       if (pixmap_->isColorMap()) {
         int ind = pixmap_->getImage()->getColorIndexPixel(x_, y_);
