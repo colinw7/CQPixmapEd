@@ -15,7 +15,7 @@ class CQPixmapTipSwatch : public QWidget {
     update();
   }
 
-  void paintEvent(QPaintEvent *) {
+  void paintEvent(QPaintEvent *) override {
     QPainter p(this);
 
     p.fillRect(rect(), QBrush(Qt::Dense6Pattern));

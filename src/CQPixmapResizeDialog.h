@@ -14,7 +14,7 @@ class CQPixmapResizeDialog : public QDialog {
   void init(int width, int height);
 
  private slots:
-  void accept();
+  void accept() override;
 
  signals:
   void resize(int width, int height);

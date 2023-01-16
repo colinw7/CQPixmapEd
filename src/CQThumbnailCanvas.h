@@ -16,7 +16,7 @@ class CQThumbnailCanvas : public QWidget {
   CQThumbnailCanvas(CQPixmap *pixmap);
 
  private:
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
  private:
   CQPixmap *pixmap_;

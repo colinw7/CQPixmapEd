@@ -3,6 +3,7 @@
 #include <CQPixmapEd.h>
 #include <CQToolTip.h>
 #include <CQUtil.h>
+#include <CQUtilRGBA.h>
 
 #include <QToolTip>
 #include <QPainter>

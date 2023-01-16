@@ -15,7 +15,7 @@ class CQPixmapRescaleDialog : public QDialog {
   void init(int width, int height, bool keep_aspect);
 
  private slots:
-  void accept();
+  void accept() override;
 
  signals:
   void rescale(int width, int height, bool keep_aspect);

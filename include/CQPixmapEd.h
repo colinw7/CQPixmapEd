@@ -47,7 +47,7 @@ class CQPixmapUndoImage : public CUndoData {
  ~CQPixmapUndoImage() {
   }
 
-  bool exec();
+  bool exec() override;
 
  private:
   CQPixmap *pixmap_;

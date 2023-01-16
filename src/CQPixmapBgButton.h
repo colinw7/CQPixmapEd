@@ -15,9 +15,9 @@ class CQPixmapBgButton : public QPushButton {
   void getColor(QColor &c, int &ind) const;
 
  private:
-  void paintEvent(QPaintEvent *);
+  void paintEvent(QPaintEvent *) override;
 
-  void mousePressEvent(QMouseEvent *);
+  void mousePressEvent(QMouseEvent *) override;
 
  private:
   CQPixmap *pixmap_;

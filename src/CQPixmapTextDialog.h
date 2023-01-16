@@ -14,7 +14,7 @@ class CQPixmapTextDialog : public QDialog {
   void init(const QString &str);
 
  private slots:
-  void accept();
+  void accept() override;
 
  signals:
   void setText(const QString &str);

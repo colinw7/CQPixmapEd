@@ -32,6 +32,7 @@
 
 #include <CQImageButton.h>
 #include <CQUtil.h>
+#include <CQUtilRGBA.h>
 #include <CQFont.h>
 #include <CQIntegerEdit.h>
 
@@ -2007,7 +2008,7 @@ drawText(int x, int y)
 {
   CFontPtr font = CQFontMgrInst->lookupFont(drawFont_);
 
-  CImagePtr image = font.cast<CQFont>()->getStringImage(drawText_.toStdString());
+  CImagePtr image = dynamic_cast<CQFont *>(font.get())->getStringImage(drawText_.toStdString());
 
   int x1 = std::min(x + image->getWidth () - 1, image_->getWidth () - 1);
   int y1 = std::min(y + image->getHeight() - 1, image_->getHeight() - 1);
@@ -2709,7 +2710,7 @@ drawLine(int x1, int y1, int x2, int y2)
      pixmap_(pixmap) {
     }
 
-    void drawPoint(int x, int y) {
+    void drawPoint(int x, int y) override {
       pixmap_->drawPoint(x, y);
     }
   };
@@ -2732,7 +2733,7 @@ drawRectCircle()
      pixmap_(pixmap) {
     }
 
-    void drawPoint(int x, int y) {
+    void drawPoint(int x, int y) override {
       pixmap_->drawPoint(x, y);
     }
   };
@@ -2769,7 +2770,7 @@ fillRectCircle()
      pixmap_(pixmap) {
     }
 
-    void drawPoint(int x, int y) {
+    void drawPoint(int x, int y) override {
       pixmap_->drawPoint(x, y);
     }
   };
