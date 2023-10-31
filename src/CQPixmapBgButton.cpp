@@ -10,7 +10,7 @@
 class CQPixmapBgButtonTip : public CQToolTipIFace {
  public:
   CQPixmapBgButtonTip(CQPixmapBgButton *button) :
-   button_(button), tip_(0) {
+   button_(button), tip_(nullptr) {
   }
 
  ~CQPixmapBgButtonTip() {
@@ -29,7 +29,7 @@ class CQPixmapBgButtonTip : public CQToolTipIFace {
   void hideWidget() override {
     delete tip_;
 
-    tip_ = 0;
+    tip_ = nullptr;
   }
 
   //bool trackMouse() const { return true; }

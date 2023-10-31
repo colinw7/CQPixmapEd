@@ -11,7 +11,7 @@
 class CQPixmapColorButtonTip : public CQToolTipIFace {
  public:
   CQPixmapColorButtonTip(CQPixmapColorButton *button) :
-   button_(button), tip_(0) {
+   button_(button), tip_(nullptr) {
   }
 
  ~CQPixmapColorButtonTip() {
@@ -30,7 +30,7 @@ class CQPixmapColorButtonTip : public CQToolTipIFace {
   void hideWidget() override {
     delete tip_;
 
-    tip_ = 0;
+    tip_ = nullptr;
   }
 
   //bool trackMouse() const { return true; }

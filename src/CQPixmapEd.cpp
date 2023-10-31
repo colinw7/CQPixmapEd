@@ -184,9 +184,9 @@ CQPixmap() :
  function_             (FUNCTION_POINT),
  xor_mode_             (XOR_NONE),
  filename_             ("scratch.xpm"),
- pixmap_               (0),
- pixmap_painter_       (0),
- painter_              (0),
+ pixmap_               (nullptr),
+ pixmap_painter_       (nullptr),
+ painter_              (nullptr),
  painter_depth_        (0),
  changed_              (true),
  grid_                 (true),
@@ -200,7 +200,7 @@ CQPixmap() :
  color_                (QColor(255, 255, 255)),
  fg_active_            (true),
  numColorColumns_      (32),
- color_spacer_         (0),
+ color_spacer_         (nullptr),
  x_hot_                (-1),
  y_hot_                (-1)
 {
@@ -1169,7 +1169,7 @@ createCentralWidget()
   selConfig.colorButton = false;
   selConfig.colorEdit   = false;
 
-  color_selector_ = new CQColorSelector(0, selConfig);
+  color_selector_ = new CQColorSelector(nullptr, selConfig);
 
   color_selector_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -2207,7 +2207,7 @@ initColors()
 
   delete color_spacer_;
 
-  color_spacer_ = 0;
+  color_spacer_ = nullptr;
 
   // Add new color buttons
 

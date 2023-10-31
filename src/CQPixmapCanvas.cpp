@@ -33,7 +33,7 @@ class CQPixmapCanvasTip : public CQToolTipIFace {
   void hideWidget() override {
     delete widget_;
 
-    widget_ = 0;
+    widget_ = nullptr;
   }
 
   bool trackMouse() const override { return true; }
